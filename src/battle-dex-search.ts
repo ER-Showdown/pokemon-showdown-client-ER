@@ -551,7 +551,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 	set: PokemonSet | null = null;
 
 	protected formatType: 'doubles' | 'bdsp' | 'bdspdoubles' | 'letsgo' | 'metronome' | 'natdex' | 'nfe' |
-	'dlc1' | 'dlc1doubles' | 'stadium' | 'lc' | null = null;
+	'dlc1' | 'dlc1doubles' | 'stadium' | 'lc' | 'eliteredux' | null = null;
 
 	/**
 	 * Cached copy of what the results list would be with only base filters
@@ -605,6 +605,11 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			}
 			format = format.slice(4) as ID;
 			this.dex = Dex.mod('gen8bdsp' as ID);
+		}
+		if (format.includes('eliteredux')) {
+			this.dex = Dex.mod('gen9eliteredux' as ID);
+			console.log('gen9eliteredux' as ID);
+			this.formatType = 'eliteredux'
 		}
 		if (format.includes('doubles') && this.dex.gen > 4 && !this.formatType) this.formatType = 'doubles';
 		if (format === 'partnersincrime') this.formatType = 'doubles';
@@ -721,6 +726,9 @@ abstract class BattleTypedSearch<T extends SearchType> {
 	protected firstLearnsetid(speciesid: ID) {
 		let table = BattleTeambuilderTable;
 		if (this.formatType?.startsWith('bdsp')) table = table['gen8bdsp'];
+		if(this.formatType?.startsWith('eliteredux')){ 
+			table = table['gen9eliteredux'];
+		}
 		if (this.formatType === 'letsgo') table = table['gen7letsgo'];
 		if (speciesid in table.learnsets) return speciesid;
 		const species = this.dex.species.get(speciesid);
@@ -751,7 +759,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 	}
 	protected canLearn(speciesid: ID, moveid: ID) {
 		const move = this.dex.moves.get(moveid);
-		if (this.formatType === 'natdex' && move.isNonstandard && move.isNonstandard !== 'Past') {
+		if ((this.formatType === 'eliteredux' ||this.formatType === 'natdex') && move.isNonstandard && move.isNonstandard !== 'Past') {
 			return false;
 		}
 		const gen = this.dex.gen;
@@ -761,7 +769,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			this.format.startsWith('battlespot') ||
 			this.format.startsWith('battlestadium') ||
 			this.format.startsWith('battlefestival') ||
-			(this.dex.gen === 9 && this.formatType !== 'natdex')
+			(this.dex.gen === 9 && this.formatType !== 'natdex' && this.formatType !== 'eliteredux')
 		) {
 			if (gen === 9) {
 				genChar = 'a';
@@ -777,6 +785,9 @@ abstract class BattleTypedSearch<T extends SearchType> {
 		while (learnsetid) {
 			let table = BattleTeambuilderTable;
 			if (this.formatType?.startsWith('bdsp')) table = table['gen8bdsp'];
+			if(this.formatType?.startsWith('eliteredux')) {
+				table = table['gen9eliteredux']; 
+			}
 			if (this.formatType === 'letsgo') table = table['gen7letsgo'];
 			let learnset = table.learnsets[learnsetid];
 			if (learnset && (moveid in learnset) && (!this.format.startsWith('tradebacks') ? learnset[moveid].includes(genChar) :
@@ -804,6 +815,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			this.formatType === 'dlc1doubles' ? 'gen8dlc1doubles' :
 			this.formatType === 'natdex' ? `gen${gen}natdex` :
 			this.formatType === 'stadium' ? `gen${gen}stadium${gen > 1 ? gen : ''}` :
+			this.formatType === 'eliteredux' ? `gen9eliteredux` :
 			`gen${gen}`;
 		if (table && table[tableKey]) {
 			table = table[tableKey];
@@ -882,6 +894,8 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 	}
 	getBaseResults(): SearchRow[] {
 		const format = this.format;
+		console.log('format: ')
+		console.log(format);
 		if (!format) return this.getDefaultResults();
 		const isVGCOrBS = format.startsWith('battlespot') || format.startsWith('battlestadium') || format.startsWith('vgc');
 		let isDoublesOrBS = isVGCOrBS || this.formatType?.includes('doubles');
@@ -905,11 +919,18 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 			isDoublesOrBS = true;
 		} else if (dex.gen < 9 && !this.formatType) {
 			table = table['gen' + dex.gen];
+			console.log('normal gen table: ' + table) //debug
 		} else if (this.formatType?.startsWith('bdsp')) {
 			table = table['gen8' + this.formatType];
+			console.log('bdsp gen table: ' + table) //debug
+		} else if (this.formatType === 'eliteredux') {
+			table = table['gen9' + this.formatType];
+			console.log('eliteredux gen table: ') 
+			console.log(table)//debug
 		} else if (this.formatType === 'letsgo') {
 			table = table['gen7letsgo'];
 		} else if (this.formatType === 'natdex') {
+			console.log('natdex gen')
 			table = table['gen' + this.dex.gen + 'natdex'];
 		} else if (this.formatType === 'metronome') {
 			table = table['gen' + dex.gen + 'metronome'];
@@ -926,7 +947,6 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 		} else if (this.formatType === 'stadium') {
 			table = table['gen' + dex.gen + 'stadium' + (dex.gen > 1 ? dex.gen : '')];
 		}
-
 		if (!table.tierSet) {
 			table.tierSet = table.tiers.map((r: any) => {
 				if (typeof r === 'string') return ['pokemon', r];
@@ -1013,6 +1033,7 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 		if (!filters) return true;
 		if (row[0] !== 'pokemon') return true;
 		const species = this.dex.species.get(row[1]);
+		console.log(species); //debug
 		for (const [filterType, value] of filters) {
 			switch (filterType) {
 			case 'type':
@@ -1076,6 +1097,7 @@ class BattleAbilitySearch extends BattleTypedSearch<'ability'> {
 		const format = this.format;
 		const isHackmons = (format.includes('hackmons') || format.endsWith('bh'));
 		const isAAA = (format === 'almostanyability' || format.includes('aaa'));
+		const isER = (format === 'eliteredux');
 		const dex = this.dex;
 		let species = dex.species.get(this.species);
 		let abilitySet: SearchRow[] = [['header', "Abilities"]];
@@ -1095,6 +1117,18 @@ class BattleAbilitySearch extends BattleTypedSearch<'ability'> {
 		if (species.abilities['S']) {
 			abilitySet.push(['header', "Special Event Ability"]);
 			abilitySet.push(['ability', toID(species.abilities['S'])]);
+		} 
+		if (isER) {
+			abilitySet.push(['header', "Innates"]);
+			if (species.abilities['I1']) {
+				abilitySet.push(['ability',toID(species.abilities['I1'])])
+			}
+			if (species.abilities['I2']) {
+				abilitySet.push(['ability',toID(species.abilities['I2'])])
+			}
+			if (species.abilities['I3']) {
+				abilitySet.push(['ability',toID(species.abilities['I3'])])
+			}
 		}
 		if (isAAA || format.includes('metronomebattle') || isHackmons) {
 			let abilities: ID[] = [];
@@ -1155,6 +1189,8 @@ class BattleItemSearch extends BattleTypedSearch<'item'> {
 		let table = BattleTeambuilderTable;
 		if (this.formatType?.startsWith('bdsp')) {
 			table = table['gen8bdsp'];
+		} else if (this.formatType?.startsWith('eliteredux')) {
+			table = table['gen9eliteredux'];
 		} else if (this.formatType === 'natdex') {
 			table = table['gen' + this.dex.gen + 'natdex'];
 		} else if (this.formatType === 'metronome') {
@@ -1473,7 +1509,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		const isTradebacks = format.includes('tradebacks');
 		const regionBornLegality = dex.gen >= 6 &&
 			/^battle(spot|stadium|festival)/.test(format) || format.startsWith('vgc') ||
-			(dex.gen === 9 && this.formatType !== 'natdex');
+			(dex.gen === 9 && this.formatType !== 'natdex' && this.formatType !== 'eliteredux');
 
 		let learnsetid = this.firstLearnsetid(species.id);
 		let moves: string[] = [];
@@ -1482,6 +1518,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		let gen = '' + dex.gen;
 		let lsetTable = BattleTeambuilderTable;
 		if (this.formatType?.startsWith('bdsp')) lsetTable = lsetTable['gen8bdsp'];
+		if (this.formatType?.startsWith('eliteredux')) lsetTable = lsetTable['gen9eliteredux'];
 		if (this.formatType === 'letsgo') lsetTable = lsetTable['gen7letsgo'];
 		if (this.formatType?.startsWith('dlc1')) lsetTable = lsetTable['gen8dlc1'];
 		while (learnsetid) {
@@ -1500,7 +1537,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 					) {
 						continue;
 					}
-					if (this.formatType !== 'natdex' && move.isNonstandard === "Past") {
+					if ((this.formatType !== 'natdex' || 'eliteredux') && move.isNonstandard === "Past") {
 						continue;
 					}
 					if (
@@ -1530,13 +1567,13 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 				if (sketch) {
 					if (move.noSketch || move.isMax || move.isZ) continue;
 					if (move.isNonstandard && move.isNonstandard !== 'Past') continue;
-					if (move.isNonstandard === 'Past' && this.formatType !== 'natdex') continue;
+					if (move.isNonstandard === 'Past' && this.formatType !== 'natdex' || 'eliteredux') continue;
 					sketchMoves.push(move.id);
 				} else {
 					if (!(dex.gen < 8 || this.formatType === 'natdex') && move.isZ) continue;
 					if (typeof move.isMax === 'string') continue;
 					if (move.isMax && dex.gen > 8) continue;
-					if (move.isNonstandard === 'Past' && this.formatType !== 'natdex') continue;
+					if (move.isNonstandard === 'Past' && this.formatType !== 'natdex' || 'eliteredux') continue;
 					if (move.isNonstandard === 'LGPE' && this.formatType !== 'letsgo') continue;
 					moves.push(move.id);
 				}

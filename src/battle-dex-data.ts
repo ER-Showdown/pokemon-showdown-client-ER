@@ -1380,7 +1380,7 @@ class Species implements Effect {
 	readonly num: number;
 	readonly types: ReadonlyArray<TypeName>;
 	readonly abilities: Readonly<{
-		0: string, 1?: string, H?: string, S?: string,
+		0: string, 1?: string, H?: string, S?: string, I1?: string, I2?: string, I3?: string
 	}>;
 	readonly baseStats: Readonly<{
 		hp: number, atk: number, def: number, spa: number, spd: number, spe: number,

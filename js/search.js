@@ -343,7 +343,7 @@
 
 		// abilities
 		if (gen >= 3) {
-			var abilities = Dex.forGen(gen).species.get(id).abilities;
+			var abilities = this.engine ? this.engine.dex.species.get(id).abilities : Dex.forGen(gen).species.get(id).abilities; //allows modded abilities to show in search
 			if (gen >= 5) {
 				if (abilities['1']) {
 					buf += '<span class="col twoabilitycol">' + abilities['0'] + '<br />' +
