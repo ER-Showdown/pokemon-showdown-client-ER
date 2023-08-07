@@ -696,7 +696,7 @@ export class Side {
 			this.sideConditions[condition] = [effect.name, 1, 5, 0];
 			break;
 		case 'tailwind':
-			this.sideConditions[condition] = [effect.name, 1, this.battle.gen >= 5 ? persist ? 6 : 4 : persist ? 5 : 3, 0];
+			this.sideConditions[condition] = [effect.name, 1, 3, 4]; //3 for gen 4 and air blower, 4 for default
 			break;
 		case 'luckychant':
 			this.sideConditions[condition] = [effect.name, 1, 5, 0];
@@ -3354,6 +3354,7 @@ export class Battle {
 		}
 		case 'tier': {
 			this.tier = args[1];
+			console.log('tier:' + this.tier);
 			if (this.tier.slice(-13) === 'Random Battle') {
 				this.speciesClause = true;
 			}
@@ -3363,6 +3364,9 @@ export class Battle {
 			}
 			if (this.tier.includes(`Let's Go`)) {
 				this.dex = Dex.mod('gen7letsgo' as ID);
+			}
+			if (this.tier.includes(`Elite Redux`)) {
+				this.dex = Dex.mod(`gen8eliteredux` as ID);
 			}
 			this.log(args);
 			break;
