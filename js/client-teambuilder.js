@@ -28,7 +28,7 @@
 					this.curTeam.dex = Dex.mod('gen8bdsp');
 				}
 				if (this.curTeam.format.includes('eliteredux')) {
-					this.curTeam.dex = Dex.mod('gen9eliteredux');
+					this.curTeam.dex = Dex.mod('gen8eliteredux');
 				}
 				Storage.activeSetList = this.curSetList;
 			}
@@ -700,7 +700,7 @@
 				this.curTeam.dex = Dex.mod('gen8bdsp');
 			}
 			if (this.curTeam.format.includes('eliteredux')) {
-				this.curTeam.dex = Dex.mod('gen9eliteredux');
+				this.curTeam.dex = Dex.mod('gen8eliteredux');
 			}
 			Storage.activeSetList = this.curSetList = Storage.unpackTeam(this.curTeam.team);
 			this.curTeamIndex = i;
@@ -1498,7 +1498,7 @@
 				this.curTeam.dex = Dex.mod('gen8bdsp');
 			}
 			if (this.curTeam.format.includes('eliteredux')) {
-				this.curTeam.dex = Dex.mod('gen9eliteredux');
+				this.curTeam.dex = Dex.mod('gen8eliteredux');
 			}
 			this.save();
 			if ((this.curTeam.gen === 5 || this.curTeam.format.includes('eliteredux')) && !Dex.loadedSpriteData['bw']) Dex.loadSpriteData('bw');
