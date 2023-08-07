@@ -262,7 +262,7 @@
 		buf += '<button class="sortcol numsortcol' + (!this.sortCol ? ' cur' : '') + '">' + (!this.sortCol ? 'Sort: ' : this.engine.firstPokemonColumn) + '</button>';
 		buf += '<button class="sortcol pnamesortcol' + (this.sortCol === 'name' ? ' cur' : '') + '" data-sort="name">Name</button>';
 		buf += '<button class="sortcol typesortcol' + (this.sortCol === 'type' ? ' cur' : '') + '" data-sort="type">Types</button>';
-		buf += '<button class="sortcol abilitysortcol' + (this.sortCol === 'ability' ? ' cur' : '') + '" data-sort="ability">Abilities</button>';
+		buf += '<button class="sortcol abilitysortcol' + (this.sortCol === 'ability' ? ' cur' : '') + '" data-sort="ability">Abilities & Innates</button>';
 		buf += '<button class="sortcol statsortcol' + (this.sortCol === 'hp' ? ' cur' : '') + '" data-sort="hp">HP</button>';
 		buf += '<button class="sortcol statsortcol' + (this.sortCol === 'atk' ? ' cur' : '') + '" data-sort="atk">Atk</button>';
 		buf += '<button class="sortcol statsortcol' + (this.sortCol === 'def' ? ' cur' : '') + '" data-sort="def">Def</button>';
@@ -345,28 +345,41 @@
 		if (gen >= 3) {
 			var abilities = this.engine ? this.engine.dex.species.get(id).abilities : Dex.forGen(gen).species.get(id).abilities; //allows modded abilities to show in search
 			if (gen >= 5) {
+			// 	if (abilities['1']) {
+			// 		buf += '<span class="col twoabilitycol">' + abilities['0'] + '<br />' +
+			// 			abilities['1'] + '</span>';
+			// 	} else {
+			// 		buf += '<span class="col abilitycol">' + abilities['0'] + '</span>';
+			// 	}
+			// 	var unreleasedHidden = pokemon.unreleasedHidden;
+			// 	if (unreleasedHidden === 'Past' && (this.mod === 'natdex' || gen < 8)) unreleasedHidden = false;
+			// 	if (abilities['S']) {
+			// 		if (abilities['H']) {
+			// 			buf += '<span class="col twoabilitycol' + (unreleasedHidden ? ' unreleasedhacol' : '') + '">' + (abilities['H'] || '') + '<br />(' + abilities['S'] + ')</span>';
+			// 		} else {
+			// 			buf += '<span class="col abilitycol">(' + abilities['S'] + ')</span>';
+			// 		}
+			// 	} else if (abilities['H']) {
+			// 		buf += '<span class="col abilitycol' + (unreleasedHidden ? ' unreleasedhacol' : '') + '">' + abilities['H'] + '</span>';
+			// 	} else {
+			// 		buf += '<span class="col abilitycol"></span>';
+			// 	}
+			// } else {
+			// 	buf += '<span class="col abilitycol">' + abilities['0'] + '</span>';
+			// 	buf += '<span class="col abilitycol">' + (abilities['1'] ? abilities['1'] : '') + '</span>';
+
 				if (abilities['1']) {
 					buf += '<span class="col twoabilitycol">' + abilities['0'] + '<br />' +
-						abilities['1'] + '</span>';
+						abilities['1'] +
+						'<br />' + (abilities['H'] ? abilities['H'] : '') + '</span>';
 				} else {
-					buf += '<span class="col abilitycol">' + abilities['0'] + '</span>';
+					buf += '<span class="col twoabilitycol">' + abilities['0'] + '<br />' + (abilities['H'] ? abilities['H'] : '') + '</span>';
 				}
-				var unreleasedHidden = pokemon.unreleasedHidden;
-				if (unreleasedHidden === 'Past' && (this.mod === 'natdex' || gen < 8)) unreleasedHidden = false;
-				if (abilities['S']) {
-					if (abilities['H']) {
-						buf += '<span class="col twoabilitycol' + (unreleasedHidden ? ' unreleasedhacol' : '') + '">' + (abilities['H'] || '') + '<br />(' + abilities['S'] + ')</span>';
-					} else {
-						buf += '<span class="col abilitycol">(' + abilities['S'] + ')</span>';
-					}
-				} else if (abilities['H']) {
-					buf += '<span class="col abilitycol' + (unreleasedHidden ? ' unreleasedhacol' : '') + '">' + abilities['H'] + '</span>';
-				} else {
-					buf += '<span class="col abilitycol"></span>';
-				}
-			} else {
-				buf += '<span class="col abilitycol">' + abilities['0'] + '</span>';
-				buf += '<span class="col abilitycol">' + (abilities['1'] ? abilities['1'] : '') + '</span>';
+				buf += '<span class="col twoabilitycol">' +
+				(abilities['I1'] ? abilities['I1'] : '') +
+				'<br />' + (abilities['I2'] ? abilities['I2'] : '') +
+				'<br />' + (abilities['I3'] ? abilities['I3'] : '') +
+				'</span>';
 			}
 		} else {
 			buf += '<span class="col abilitycol"></span>';

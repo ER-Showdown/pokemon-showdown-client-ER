@@ -854,11 +854,19 @@ class BattleTooltips {
 		}
 
 		const supportsAbilities = this.battle.gen > 2 && !this.battle.tier.includes("Let's Go");
+		const supportsInnates = this.battle.tier.includes('Elite Redux');
 
 		let abilityText = '';
 		if (supportsAbilities) {
 			abilityText = this.getPokemonAbilityText(
 				clientPokemon, serverPokemon, isActive, !!illusionIndex && illusionIndex > 1
+			);
+		}
+
+		let innateText = '';
+		if (supportsInnates) {
+			innateText = this.getPokemonInnateText(
+				clientPokemon, serverPokemon, isActive,
 			);
 		}
 
@@ -892,9 +900,14 @@ class BattleTooltips {
 			text += '<p>';
 			text += abilityText;
 			if (abilityText && itemText) {
+				//TODO: Fix benched pokemon innates not showing
 				// ability/item on one line for your own switch tooltips, two lines everywhere else
 				text += (!isActive && serverPokemon ? ' / ' : '</p><p>');
+			} else {
+				text += '</p><p>'
 			}
+			if (innateText)  text += innateText;
+			text += '</p><p>';
 			text += itemText;
 			text += '</p>';
 		}
@@ -1097,6 +1110,9 @@ class BattleTooltips {
 		if (ability === 'hustle' || (ability === 'gorillatactics' && !clientPokemon?.volatiles['dynamax'])) {
 			stats.atk = Math.floor(stats.atk * 1.5);
 		}
+		if ((ability === 'sagepower' && !clientPokemon?.volatiles['dynamax'])) {
+			stats.spa = Math.floor(stats.spa * 1.5)
+		}
 		if (weather) {
 			if (this.battle.gen >= 4 && this.pokemonHasType(pokemon, 'Rock') && weather === 'sandstorm') {
 				stats.spd = Math.floor(stats.spd * 1.5);
@@ -1120,6 +1136,10 @@ class BattleTooltips {
 					}
 					if (ability === 'orichalcumpulse') {
 						stats.atk = Math.floor(stats.atk * 1.3);
+					}
+					if (ability === 'bigleaves') {
+						stats.spa = Math.floor(stats.spa * 1.5);
+						speedModifiers.push(2);
 					}
 					let allyActive = clientPokemon?.side.active;
 					if (allyActive) {
@@ -1398,6 +1418,7 @@ class BattleTooltips {
 		const pokemon = value.pokemon;
 		const serverPokemon = value.serverPokemon;
 
+
 		let moveType = move.type;
 		let category = move.category;
 		if (category === 'Status' && forMaxMove) return ['Normal', 'Status']; // Max Guard
@@ -1500,6 +1521,13 @@ class BattleTooltips {
 					if (value.abilityModify(0, 'Galvanize')) moveType = 'Electric';
 					if (value.abilityModify(0, 'Pixilate')) moveType = 'Fairy';
 					if (value.abilityModify(0, 'Refrigerate')) moveType = 'Ice';
+					if (value.abilityModify(0, 'Burnate')) moveType = 'Fire';
+					if (value.abilityModify(0, 'Fighting Spirit')) moveType = 'Fighting';
+					if (value.abilityModify(0, 'Groundate')) moveType = 'Ground';
+					if (value.abilityModify(0, 'Hydrate')) moveType = 'Water';
+					if (value.abilityModify(0, 'Poisonate')) moveType = 'Poison';
+					if (value.abilityModify(0, 'Buginize')) moveType = 'Bug';
+
 				}
 				if (value.abilityModify(0, 'Normalize')) moveType = 'Normal';
 			}
@@ -1639,6 +1667,7 @@ class BattleTooltips {
 	getMoveBasePower(move: Move, moveType: TypeName, value: ModifiableValue, target: Pokemon | null = null) {
 		const pokemon = value.pokemon!;
 		const serverPokemon = value.serverPokemon;
+
 
 		// apply modifiers for moves that depend on the actual stats
 		const modifiedStats = this.calculateModifiedStats(pokemon, serverPokemon);
@@ -1874,6 +1903,15 @@ class BattleTooltips {
 		if (move.flags['slicing']) {
 			value.abilityModify(1.5, "Sharpness");
 		}
+		if (move.flags['kick']) {
+			value.abilityModify(1.3, "Striker");
+		}
+		if (move.flags['weather']) {
+			value.abilityModify(1.25, "Field Explorer");
+		}
+		if (move.flags['wind']) {
+			value.abilityModify(1.25, "Giant Wings");
+		}
 		for (let i = 1; i <= 5 && i <= pokemon.side.faintCounter; i++) {
 			if (pokemon.volatiles[`fallen${i}`]) {
 				value.abilityModify(1 + 0.1 * i, "Supreme Overlord");
@@ -1886,6 +1924,7 @@ class BattleTooltips {
 				value.abilityModify(1.25, "Rivalry");
 			}
 		}
+
 		const noTypeOverride = [
 			'judgment', 'multiattack', 'naturalgift', 'revelationdance', 'struggle', 'technoblast', 'terrainpulse', 'weatherball',
 		];
@@ -1899,6 +1938,12 @@ class BattleTooltips {
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Galvanize");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Pixilate");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Refrigerate");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Burnate");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Fighting Spirit");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Groundate");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Hydrate");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Poisonate");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Buginize");
 			}
 			if (this.battle.gen > 6) {
 				value.abilityModify(1.2, "Normalize");
@@ -2156,7 +2201,27 @@ class BattleTooltips {
 			}
 		}
 		return abilityData;
+	} 
+	//Gets Elite Redux Innate Data
+	getPokemonInnateData(clientPokemon: Pokemon | null, serverPokemon: ServerPokemon | null | undefined) {
+		//Leaving innateData as object for future shenanegins
+		const innateData:  {innates: string[]} = {
+			innates: [],
+		};
+		if (clientPokemon) {
+			const speciesForme = clientPokemon.getSpeciesForme() || serverPokemon?.speciesForme || '';
+			const species = this.battle.dex.species.get(speciesForme);
+			if (species.exists && species.abilities['I1']) {
+				if (species.abilities['I1']) innateData.innates.push(species.abilities['I1']);
+				if (species.abilities['I2']) innateData.innates.push(species.abilities['I2']);
+				if (species.abilities['I3']) innateData.innates.push(species.abilities['I3']);
+			}
+		};
+		console.log('innate data debug:');
+		console.table(innateData.innates);
+		return innateData;
 	}
+
 	getPokemonAbilityText(
 		clientPokemon: Pokemon | null,
 		serverPokemon: ServerPokemon | null | undefined,
@@ -2182,6 +2247,23 @@ class BattleTooltips {
 		}
 		return text;
 	}
+
+	//Gets Elite Redux Innate Text for Toolip
+	getPokemonInnateText( 
+		clientPokemon: Pokemon | null,
+		serverPokemon: ServerPokemon | null | undefined,
+		isActive: boolean | undefined,
+	) {
+		let text = '';
+		const innateData = this.getPokemonInnateData(clientPokemon, serverPokemon);
+		if (innateData.innates.length) {
+			text = '<small>Innates:</small> ' + innateData.innates.join(', ');
+		}
+		console.log('innate text debug:');
+		console.log(text);
+		return text;
+	}
+	
 }
 
 type StatsTable = {hp: number, atk: number, def: number, spa: number, spd: number, spe: number};

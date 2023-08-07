@@ -219,7 +219,7 @@
 .dexlist .abilitycol {
 	padding-top: 8px;
 	height: 21px;
-	font-size: 8pt;
+	font-size: 6pt;
 	width: 86px;
 	text-align: center;
 	white-space: nowrap;
@@ -227,7 +227,7 @@
 .dexlist .twoabilitycol {
 	padding-top: 1px;
 	height: 28px;
-	font-size: 8pt;
+	font-size: 6pt;
 	width: 86px;
 	text-align: center;
 	white-space: nowrap;

@@ -1138,6 +1138,15 @@ interface MoveFlags {
 	sound?: 1 | 0;
 	/** Activates the effects of the Wind Power and Wind Rider Abilities. */
 	wind?: 1 | 0;
+	//**Elite Redux Flags**
+	//Power multplied by 25% with Field Explorer
+	field?: 1 | 0;
+	//Negated by pokemon with Weather Control
+	weather?: 1 | 0;
+	//Power multiplied by 1.3 with Striker
+	kick?: 1 | 0;
+	//Ignores immunity and Tinted Lens effect with Bone Zone
+	bone?: 1 | 0; 
 }
 
 type MoveTarget = 'normal' | 'any' | 'adjacentAlly' | 'adjacentFoe' | 'adjacentAllyOrSelf' | // single-target

@@ -607,8 +607,8 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			this.dex = Dex.mod('gen8bdsp' as ID);
 		}
 		if (format.includes('eliteredux')) {
-			this.dex = Dex.mod('gen9eliteredux' as ID);
-			console.log('gen9eliteredux' as ID);
+			this.dex = Dex.mod('gen8eliteredux' as ID);
+			console.log('gen8eliteredux' as ID);
 			this.formatType = 'eliteredux'
 		}
 		if (format.includes('doubles') && this.dex.gen > 4 && !this.formatType) this.formatType = 'doubles';
@@ -727,7 +727,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 		let table = BattleTeambuilderTable;
 		if (this.formatType?.startsWith('bdsp')) table = table['gen8bdsp'];
 		if(this.formatType?.startsWith('eliteredux')){ 
-			table = table['gen9eliteredux'];
+			table = table['gen8eliteredux'];
 		}
 		if (this.formatType === 'letsgo') table = table['gen7letsgo'];
 		if (speciesid in table.learnsets) return speciesid;
@@ -759,9 +759,10 @@ abstract class BattleTypedSearch<T extends SearchType> {
 	}
 	protected canLearn(speciesid: ID, moveid: ID) {
 		const move = this.dex.moves.get(moveid);
-		if ((this.formatType === 'eliteredux' ||this.formatType === 'natdex') && move.isNonstandard && move.isNonstandard !== 'Past') {
+		if ((this.formatType === 'natdex') && move.isNonstandard && move.isNonstandard !== 'Past') {
 			return false;
 		}
+		
 		const gen = this.dex.gen;
 		let genChar = `${gen}`;
 		if (
@@ -786,7 +787,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			let table = BattleTeambuilderTable;
 			if (this.formatType?.startsWith('bdsp')) table = table['gen8bdsp'];
 			if(this.formatType?.startsWith('eliteredux')) {
-				table = table['gen9eliteredux']; 
+				table = table['gen8eliteredux']; 
 			}
 			if (this.formatType === 'letsgo') table = table['gen7letsgo'];
 			let learnset = table.learnsets[learnsetid];
@@ -815,7 +816,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			this.formatType === 'dlc1doubles' ? 'gen8dlc1doubles' :
 			this.formatType === 'natdex' ? `gen${gen}natdex` :
 			this.formatType === 'stadium' ? `gen${gen}stadium${gen > 1 ? gen : ''}` :
-			this.formatType === 'eliteredux' ? `gen9eliteredux` :
+			this.formatType === 'eliteredux' ? `gen8eliteredux` :
 			`gen${gen}`;
 		if (table && table[tableKey]) {
 			table = table[tableKey];
@@ -924,7 +925,7 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 			table = table['gen8' + this.formatType];
 			console.log('bdsp gen table: ' + table) //debug
 		} else if (this.formatType === 'eliteredux') {
-			table = table['gen9' + this.formatType];
+			table = table['gen8' + this.formatType];
 			console.log('eliteredux gen table: ') 
 			console.log(table)//debug
 		} else if (this.formatType === 'letsgo') {
@@ -1190,7 +1191,7 @@ class BattleItemSearch extends BattleTypedSearch<'item'> {
 		if (this.formatType?.startsWith('bdsp')) {
 			table = table['gen8bdsp'];
 		} else if (this.formatType?.startsWith('eliteredux')) {
-			table = table['gen9eliteredux'];
+			table = table['gen8eliteredux'];
 		} else if (this.formatType === 'natdex') {
 			table = table['gen' + this.dex.gen + 'natdex'];
 		} else if (this.formatType === 'metronome') {
@@ -1518,7 +1519,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		let gen = '' + dex.gen;
 		let lsetTable = BattleTeambuilderTable;
 		if (this.formatType?.startsWith('bdsp')) lsetTable = lsetTable['gen8bdsp'];
-		if (this.formatType?.startsWith('eliteredux')) lsetTable = lsetTable['gen9eliteredux'];
+		if (this.formatType?.startsWith('eliteredux')) lsetTable = lsetTable['gen8eliteredux'];
 		if (this.formatType === 'letsgo') lsetTable = lsetTable['gen7letsgo'];
 		if (this.formatType?.startsWith('dlc1')) lsetTable = lsetTable['gen8dlc1'];
 		while (learnsetid) {
