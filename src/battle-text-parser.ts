@@ -131,7 +131,7 @@ class BattleTextParser {
 				return {args: ['-singlemove', pokemon, effect], kwArgs: {of: target}};
 			}
 			if ([
-				'bind', 'wrap', 'clamp', 'whirlpool', 'firespin', 'magmastorm', 'sandtomb', 'infestation', 'snaptrap', 'thundercage', 'trapped',
+				'bind', 'wrap', 'clamp', 'whirlpool', 'firespin', 'magmastorm', 'sandtomb', 'infestation', 'snaptrap', 'thundercage', 'trapped', 'grippincer'
 			].includes(id)) {
 				return {args: ['-start', pokemon, effect], kwArgs: {of: target}};
 			}
