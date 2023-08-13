@@ -1115,21 +1115,25 @@ class BattleTooltips {
 		}
 		if (weather) {
 			if (this.battle.gen >= 4 && this.pokemonHasType(pokemon, 'Rock') && weather === 'sandstorm') {
-				stats.spd = Math.floor(stats.spd * 1.5);
+				if (this.battle.weatherSource === 'Ability') { //Sandstorm nerf
+					stats.spd = Math.floor(stats.spd * 1.2);
+				} else {
+					stats.spd = Math.floor(stats.spd * 1.5);
+				}
 			}
 			if (this.pokemonHasType(pokemon, 'Ice') && weather === 'snow') {
 				stats.def = Math.floor(stats.def * 1.5);
 			}
 			if (ability === 'sandrush' && weather === 'sandstorm') {
-				speedModifiers.push(2);
+				speedModifiers.push(1.5);
 			}
 			if (ability === 'slushrush' && (weather === 'hail' || weather === 'snow')) {
-				speedModifiers.push(2);
+				speedModifiers.push(1.5);
 			}
 			if (item !== 'utilityumbrella') {
 				if (weather === 'sunnyday' || weather === 'desolateland') {
 					if (ability === 'chlorophyll') {
-						speedModifiers.push(2);
+						speedModifiers.push(1.5);
 					}
 					if (ability === 'solarpower') {
 						stats.spa = Math.floor(stats.spa * 1.5);
@@ -1139,7 +1143,7 @@ class BattleTooltips {
 					}
 					if (ability === 'bigleaves') {
 						stats.spa = Math.floor(stats.spa * 1.5);
-						speedModifiers.push(2);
+						speedModifiers.push(1.5);
 					}
 					let allyActive = clientPokemon?.side.active;
 					if (allyActive) {
@@ -1155,7 +1159,7 @@ class BattleTooltips {
 				}
 				if (weather === 'raindance' || weather === 'primordialsea') {
 					if (ability === 'swiftswim') {
-						speedModifiers.push(2);
+						speedModifiers.push(1.5);
 					}
 				}
 			}
@@ -1201,7 +1205,7 @@ class BattleTooltips {
 		}
 		if (this.battle.hasPseudoWeather('Electric Terrain')) {
 			if (ability === 'surgesurfer') {
-				speedModifiers.push(2);
+				speedModifiers.push(1.5);
 			}
 			if (ability === 'hadronengine') {
 				stats.spa = Math.floor(stats.spa * 1.3);

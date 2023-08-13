@@ -1052,6 +1052,7 @@ export class Battle {
 	isReplay = false;
 	usesUpkeep = false;
 	weather = '' as ID;
+	weatherSource = '';
 	pseudoWeather = [] as WeatherState[];
 	weatherTimeLeft = 0;
 	weatherMinTimeLeft = 0;
@@ -1392,7 +1393,8 @@ export class Battle {
 			if (poke) {
 				if (ability) {
 					this.activateAbility(poke, ability.name);
-				}
+					this.weatherSource = 'Ability';
+				} else {this.weatherSource = 'Move'}
 				this.weatherTimeLeft = (this.gen <= 5 || isExtremeWeather) ? 0 : 8;
 				this.weatherMinTimeLeft = (this.gen <= 5 || isExtremeWeather) ? 0 : 5;
 			} else if (isExtremeWeather) {
