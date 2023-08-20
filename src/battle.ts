@@ -121,6 +121,8 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 		this.searchid = data.searchid;
 
 		this.sprite = side.battle.scene.addPokemonSprite(this);
+
+		
 	}
 
 	isActive() {
@@ -528,6 +530,22 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 			return '';
 		}
 		return ability.name;
+	}
+	//TODO: Should probably refactor code to just call this function bc client is a mess rn
+	getActiveAbilities(clientPokemon: Pokemon, serverPokemon?: ServerPokemon) {
+		const innates = [];
+		let ability;
+		if (clientPokemon) {
+			const speciesForme = clientPokemon.getSpeciesForme() || serverPokemon?.speciesForme || '';
+			const species = Dex.species.get(speciesForme);
+			ability = clientPokemon.ability || serverPokemon?.ability
+			if (species.exists && species.abilities['I1']) {
+				if (species.abilities['I1']) innates.push(species.abilities['I1']);
+				if (species.abilities['I2']) innates.push(species.abilities['I2']);
+				if (species.abilities['I3']) innates.push(species.abilities['I3']);
+			}
+		};
+		return [ability, ...innates]
 	}
 	getTypeList(serverPokemon?: ServerPokemon, preterastallized = false) {
 		const [types, addedType] = this.getTypes(serverPokemon, preterastallized);
@@ -1452,7 +1470,7 @@ export class Battle {
 		for (const poke of [...this.nearSide.active, ...this.farSide.active]) {
 			if (poke) {
 				if (poke.status === 'tox') poke.statusData.toxicTurns++;
-				poke.clearTurnstatuses();
+				poke.clearTurnstatuses();		
 			}
 		}
 		this.scene.updateWeather();

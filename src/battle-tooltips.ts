@@ -17,6 +17,7 @@ class ModifiableValue {
 	serverPokemon: ServerPokemon;
 	itemName: string;
 	abilityName: string;
+	innates: string[];
 	weatherName: string;
 	isAccuracy = false;
 	constructor(battle: Battle, pokemon: Pokemon, serverPokemon: ServerPokemon) {
@@ -28,8 +29,23 @@ class ModifiableValue {
 		this.itemName = Dex.items.get(serverPokemon.item).name;
 		const ability = serverPokemon.ability || pokemon?.ability || serverPokemon.baseAbility;
 		this.abilityName = Dex.abilities.get(ability).name;
+		this.innates = this.setInnates(pokemon, serverPokemon);
 		this.weatherName = battle.weather === 'snow' ? 'Snow' : Dex.moves.get(battle.weather).exists ?
 			Dex.moves.get(battle.weather).name : Dex.abilities.get(battle.weather).name;
+	}
+	setInnates(pokemon: Pokemon | null, serverPokemon: ServerPokemon | null | undefined) {
+		//TODO: Make more efficient. Function stresses client out
+		let innateList = [];
+		if (pokemon) {
+			const speciesForme = pokemon.getSpeciesForme() || serverPokemon?.speciesForme || '';
+			const species = this.battle.dex.species.get(speciesForme);
+			if (species.exists && species.abilities['I1']) {
+				if (species.abilities['I1']) innateList.push(species.abilities['I1']);
+				if (species.abilities['I2']) innateList.push(species.abilities['I2']);
+				if (species.abilities['I3']) innateList.push(species.abilities['I3']);
+			}
+		}
+		return innateList;
 	}
 	reset(value = 0, isAccuracy?: boolean) {
 		this.value = value;
@@ -57,7 +73,8 @@ class ModifiableValue {
 		return true;
 	}
 	tryAbility(abilityName: string) {
-		if (abilityName !== this.abilityName) return false;
+		// if (abilityName !== this.abilityName) return false;
+		if (abilityName !== this.abilityName && !this.innates.includes(abilityName)) return false
 		if (this.pokemon?.volatiles['gastroacid']) {
 			this.comment.push(` (${abilityName} suppressed by Gastro Acid)`);
 			return false;
@@ -841,7 +858,7 @@ class BattleTooltips {
 			text += '<p><small>HP:</small> ' + Pokemon.getHPText(pokemon) + exacthp + (pokemon.status ? ' <span class="status ' + pokemon.status + '">' + pokemon.status.toUpperCase() + '</span>' : '');
 			if (clientPokemon) {
 				if (pokemon.status === 'tox') {
-					if (pokemon.ability === 'Poison Heal' || pokemon.ability === 'Magic Guard') {
+					if (['Magic Guard', 'Poison Heal', 'Impenetrable', 'Toxic Boost'].some(a => clientPokemon.getActiveAbilities(clientPokemon).includes(a))) {
 						text += ' <small>Would take if ability removed: ' + Math.floor(100 / 16 * Math.min(clientPokemon.statusData.toxicTurns + 1, 15)) + '%</small>';
 					} else {
 						text += ' Next damage: ' + Math.floor(100 / (clientPokemon.volatiles['dynamax'] ? 32 : 16) * Math.min(clientPokemon.statusData.toxicTurns + 1, 15)) + '%';
@@ -1021,19 +1038,21 @@ class BattleTooltips {
 		}
 		if (statStagesOnly) return stats;
 
-		const ability = toID(
-			clientPokemon?.effectiveAbility(serverPokemon) ?? (serverPokemon.ability || serverPokemon.baseAbility)
-		);
+		const ability = clientPokemon?.effectiveAbility(serverPokemon) ?? (serverPokemon.ability || serverPokemon.baseAbility)
+
+
+		const activeAbilities = this.getPokemonInnateData(clientPokemon, serverPokemon).innates || [];
+		if (ability) activeAbilities.push(ability);
 
 		// check for burn, paralysis, guts, quick feet
 		if (pokemon.status) {
-			if (this.battle.gen > 2 && ability === 'guts') {
+			if (this.battle.gen > 2 && activeAbilities.includes('Guts')) {
 				stats.atk = Math.floor(stats.atk * 1.5);
 			} else if (this.battle.gen < 2 && pokemon.status === 'brn') {
 				stats.atk = Math.floor(stats.atk * 0.5);
 			}
 
-			if (this.battle.gen > 2 && ability === 'quickfeet') {
+			if (this.battle.gen > 2 && activeAbilities.includes('Quick Feet')) {
 				stats.spe = Math.floor(stats.spe * 1.5);
 			}
 		}
@@ -1049,7 +1068,7 @@ class BattleTooltips {
 		let item = toID(serverPokemon.item);
 		let speedHalvingEVItems = ['machobrace', 'poweranklet', 'powerband', 'powerbelt', 'powerbracer', 'powerlens', 'powerweight'];
 		if (
-			(ability === 'klutz' && !speedHalvingEVItems.includes(item)) ||
+			(activeAbilities.includes('Klutz') && !speedHalvingEVItems.includes(item)) ||
 			this.battle.hasPseudoWeather('Magic Room') ||
 			clientPokemon?.volatiles['embargo']
 		) {
@@ -1104,13 +1123,13 @@ class BattleTooltips {
 		if (item === 'choiceband' && !clientPokemon?.volatiles['dynamax']) {
 			stats.atk = Math.floor(stats.atk * 1.5);
 		}
-		if (ability === 'purepower' || ability === 'hugepower') {
+		if (activeAbilities.includes('Pure Power') || activeAbilities.includes('Huge Power')) {
 			stats.atk *= 2;
 		}
-		if (ability === 'hustle' || (ability === 'gorillatactics' && !clientPokemon?.volatiles['dynamax'])) {
+		if (activeAbilities.includes('Hustle') || (activeAbilities.includes('Gorilla Tactics') && !clientPokemon?.volatiles['dynamax'])) {
 			stats.atk = Math.floor(stats.atk * 1.5);
 		}
-		if ((ability === 'sagepower' && !clientPokemon?.volatiles['dynamax'])) {
+		if ((activeAbilities.includes('Sage Power') && !clientPokemon?.volatiles['dynamax'])) {
 			stats.spa = Math.floor(stats.spa * 1.5)
 		}
 		if (weather) {
@@ -1124,33 +1143,33 @@ class BattleTooltips {
 			if (this.pokemonHasType(pokemon, 'Ice') && weather === 'snow') {
 				stats.def = Math.floor(stats.def * 1.5);
 			}
-			if (ability === 'sandrush' && weather === 'sandstorm') {
+			if (activeAbilities.includes('Sand Rush') && weather === 'sandstorm') {
 				speedModifiers.push(1.5);
 			}
-			if (ability === 'slushrush' && (weather === 'hail' || weather === 'snow')) {
+			if (activeAbilities.includes('Slush Rush') && (weather === 'hail' || weather === 'snow')) {
 				speedModifiers.push(1.5);
 			}
 			if (item !== 'utilityumbrella') {
 				if (weather === 'sunnyday' || weather === 'desolateland') {
-					if (ability === 'chlorophyll') {
+					if (activeAbilities.includes('Chlorophyll')) {
 						speedModifiers.push(1.5);
 					}
-					if (ability === 'solarpower') {
+					if (activeAbilities.includes('Solar Power')) {
 						stats.spa = Math.floor(stats.spa * 1.5);
 					}
-					if (ability === 'orichalcumpulse') {
+					if (activeAbilities.includes('Orichalcum Pulse')) {
 						stats.atk = Math.floor(stats.atk * 1.3);
 					}
-					if (ability === 'bigleaves') {
+					if (activeAbilities.includes('Big Leaves')) {
 						stats.spa = Math.floor(stats.spa * 1.5);
 						speedModifiers.push(1.5);
 					}
-					let allyActive = clientPokemon?.side.active;
+					let allyActive = clientPokemon?.side.active
 					if (allyActive) {
 						for (const ally of allyActive) {
 							if (!ally || ally.fainted) continue;
-							let allyAbility = this.getAllyAbility(ally);
-							if (allyAbility === 'Flower Gift' && (ally.getSpecies().baseSpecies === 'Cherrim' || this.battle.gen <= 4)) {
+							let allyAbilities = this.getAllyAbility(ally);
+							if (allyAbilities.includes('Flower Gift') && (ally.getSpecies().baseSpecies === 'Cherrim' || this.battle.gen <= 4)) {
 								stats.atk = Math.floor(stats.atk * 1.5);
 								stats.spd = Math.floor(stats.spd * 1.5);
 							}
@@ -1158,22 +1177,22 @@ class BattleTooltips {
 					}
 				}
 				if (weather === 'raindance' || weather === 'primordialsea') {
-					if (ability === 'swiftswim') {
+					if (activeAbilities.includes('Swift Swim')) {
 						speedModifiers.push(1.5);
 					}
 				}
 			}
 		}
-		if (ability === 'defeatist' && serverPokemon.hp <= serverPokemon.maxhp / 2) {
+		if (activeAbilities.includes('Defeatist') && serverPokemon.hp <= serverPokemon.maxhp / 2) {
 			stats.atk = Math.floor(stats.atk * 0.5);
 			stats.spa = Math.floor(stats.spa * 0.5);
 		}
 		if (clientPokemon) {
-			if (clientPokemon.volatiles['slowstart']) {
+			if (clientPokemon.volatiles['Slow Start']) {
 				stats.atk = Math.floor(stats.atk * 0.5);
 				speedModifiers.push(0.5);
 			}
-			if (ability === 'unburden' && clientPokemon.volatiles['itemremoved'] && !item) {
+			if (activeAbilities.includes('Unburden') && clientPokemon.volatiles['itemremoved'] && !item) {
 				speedModifiers.push(2);
 			}
 			for (const statName of Dex.statNamesExceptHP) {
@@ -1186,7 +1205,7 @@ class BattleTooltips {
 				}
 			}
 		}
-		if (ability === 'marvelscale' && pokemon.status) {
+		if (activeAbilities.includes('Marvel Scale') && pokemon.status) {
 			stats.def = Math.floor(stats.def * 1.5);
 		}
 		const isNFE = this.battle.dex.species.get(serverPokemon.speciesForme).evos?.some(evo => {
@@ -1200,14 +1219,14 @@ class BattleTooltips {
 			stats.def = Math.floor(stats.def * 1.5);
 			stats.spd = Math.floor(stats.spd * 1.5);
 		}
-		if (ability === 'grasspelt' && this.battle.hasPseudoWeather('Grassy Terrain')) {
+		if (activeAbilities.includes('Grass Pelt') && this.battle.hasPseudoWeather('Grassy Terrain')) {
 			stats.def = Math.floor(stats.def * 1.5);
 		}
 		if (this.battle.hasPseudoWeather('Electric Terrain')) {
-			if (ability === 'surgesurfer') {
+			if (activeAbilities.includes('Surge Surfer')) {
 				speedModifiers.push(1.5);
 			}
-			if (ability === 'hadronengine') {
+			if (activeAbilities.includes('Hardon Engine')) {
 				stats.spa = Math.floor(stats.spa * 1.3);
 			}
 		}
@@ -1221,19 +1240,27 @@ class BattleTooltips {
 			stats.spa = Math.floor(stats.spa * 1.5);
 			stats.spd = Math.floor(stats.spd * 1.5);
 		}
-		if (clientPokemon && (ability === 'plus' || ability === 'minus')) {
+		if (clientPokemon && (['Plus', 'Minus'].some(a => activeAbilities.includes(a)))) {
 			let allyActive = clientPokemon.side.active;
 			if (allyActive.length > 1) {
-				let abilityName = (ability === 'plus' ? 'Plus' : 'Minus');
+				//Plus and Minus should never be on same pokemon, so only check for one
+				let abilityName = (activeAbilities.includes('Plus') ? 'Plus' : 'Minus');
 				for (const ally of allyActive) {
 					if (!ally || ally === clientPokemon || ally.fainted) continue;
-					let allyAbility = this.getAllyAbility(ally);
-					if (allyAbility !== 'Plus' && allyAbility !== 'Minus') continue;
-					if (this.battle.gen <= 4 && allyAbility === abilityName) continue;
+					let allyAbilities = this.getAllyAbility(ally);
+					if (allyAbilities.includes('Plus') && allyAbilities.includes('Minus')) continue;
+					if (this.battle.gen <= 4 && allyAbilities.includes(abilityName)) continue;
 					stats.spa = Math.floor(stats.spa * 1.5);
 					break;
 				}
 			}
+		}
+		console.log(`clientPokemon: ${clientPokemon}, hasVR: ${activeAbilities.includes('Violent Rush')}, Active turns: ${clientPokemon?.lastMove}`)
+		console.table(activeAbilities);
+		if (clientPokemon && activeAbilities.includes('Violent Rush') && !clientPokemon.lastMove) {
+			stats.atk = Math.floor(stats.atk * 1.2);
+			speedModifiers.push(1.5);
+
 		}
 		if (item === 'assaultvest') {
 			stats.spd = Math.floor(stats.spd * 1.5);
@@ -1247,7 +1274,7 @@ class BattleTooltips {
 		if (item === 'ironball' || speedHalvingEVItems.includes(item)) {
 			speedModifiers.push(0.5);
 		}
-		if (ability === 'furcoat') {
+		if (activeAbilities.includes('Fur Coat')) {
 			stats.def *= 2;
 		}
 		if (this.battle.abilityActive('Vessel of Ruin')) {
@@ -1524,8 +1551,10 @@ class BattleTooltips {
 					if (value.abilityModify(0, 'Aerilate')) moveType = 'Flying';
 					if (value.abilityModify(0, 'Galvanize')) moveType = 'Electric';
 					if (value.abilityModify(0, 'Pixilate')) moveType = 'Fairy';
+					if (value.abilityModify(0, 'Crystallize')) moveType = 'Rock';
 					if (value.abilityModify(0, 'Refrigerate')) moveType = 'Ice';
 					if (value.abilityModify(0, 'Burnate')) moveType = 'Fire';
+					if (value.abilityModify(0, 'Solar Flare')) moveType = 'Fire';
 					if (value.abilityModify(0, 'Fighting Spirit')) moveType = 'Fighting';
 					if (value.abilityModify(0, 'Groundate')) moveType = 'Ground';
 					if (value.abilityModify(0, 'Hydrate')) moveType = 'Water';
@@ -1608,8 +1637,8 @@ class BattleTooltips {
 
 		for (const active of pokemon.side.active) {
 			if (!active || active.fainted) continue;
-			const ability = this.getAllyAbility(active);
-			if (ability === 'Victory Star') {
+			const abilities = this.getAllyAbility(active);
+			if (abilities.includes('Victory Star')) {
 				accuracyModifiers.push(4506);
 				value.modify(1.1, "Victory Star");
 			}
@@ -1671,6 +1700,8 @@ class BattleTooltips {
 	getMoveBasePower(move: Move, moveType: TypeName, value: ModifiableValue, target: Pokemon | null = null) {
 		const pokemon = value.pokemon!;
 		const serverPokemon = value.serverPokemon;
+
+		const activeAbilities = value.innates;
 
 
 		// apply modifiers for moves that depend on the actual stats
@@ -1787,6 +1818,7 @@ class BattleTooltips {
 			}
 		}
 		if (
+			//We can keep Battle Bond's ability check here because Battle Bond should never be an innate
 			move.id === 'watershuriken' && pokemon.getSpeciesForme() === 'Greninja-Ash' && pokemon.ability === 'Battle Bond'
 		) {
 			value.set(20, 'Battle Bond');
@@ -1875,7 +1907,8 @@ class BattleTooltips {
 			value.abilityModify(1.5, "Flare Boost");
 		}
 		if (move.flags['punch']) {
-			value.abilityModify(1.2, 'Iron Fist');
+			value.abilityModify(1.3, 'Iron Fist');
+			value.abilityModify(1.3, 'Power Fists');
 		}
 		if (move.flags['pulse']) {
 			value.abilityModify(1.5, "Mega Launcher");
@@ -1900,17 +1933,23 @@ class BattleTooltips {
 		}
 		if (move.flags['contact']) {
 			value.abilityModify(1.3, "Tough Claws");
+			value.abilityModify(1.3, "Big Pecks");
+		}
+		if (!move.flags['contact']) {
+			value.abilityModify(1.2, "Long Reach")
 		}
 		if (move.flags['sound']) {
 			value.abilityModify(1.3, "Punk Rock");
+			value.abilityModify(1.2, 'Amplifier')
 		}
 		if (move.flags['slicing']) {
 			value.abilityModify(1.5, "Sharpness");
+			value.abilityModify(1.3, "Keen Edge");
 		}
 		if (move.flags['kick']) {
 			value.abilityModify(1.3, "Striker");
 		}
-		if (move.flags['weather']) {
+		if (move.flags['field']) {
 			value.abilityModify(1.25, "Field Explorer");
 		}
 		if (move.flags['wind']) {
@@ -1923,7 +1962,7 @@ class BattleTooltips {
 		}
 		if (target) {
 			if (["MF", "FM"].includes(pokemon.gender + target.gender)) {
-				value.abilityModify(0.75, "Rivalry");
+				// value.abilityModify(0.75, "Rivalry");
 			} else if (["MM", "FF"].includes(pokemon.gender + target.gender)) {
 				value.abilityModify(1.25, "Rivalry");
 			}
@@ -1942,12 +1981,15 @@ class BattleTooltips {
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Galvanize");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Pixilate");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Refrigerate");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Crystallize");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Burnate");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Fighting Spirit");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Groundate");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Hydrate");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Poisonate");
 				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Buginize");
+				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Solar Flare");
+
 			}
 			if (this.battle.gen > 6) {
 				value.abilityModify(1.2, "Normalize");
@@ -1956,34 +1998,51 @@ class BattleTooltips {
 		if (move.recoil || move.hasCrashDamage) {
 			value.abilityModify(1.2, 'Reckless');
 		}
+		//TODO: Would likely be easier and slightly faster to combine lists and only loop once
+		if (move.category !== 'Status') {
+			for (const ally of pokemon.side.active) {
+				if (!ally || ally.fainted) continue;
+				if (ally.status === 'slp' || ally.getActiveAbilities(ally).includes('Comatose')) {
+					value.abilityModify(2, "Dreamcatcher");
+					break;
+				}
+			}
+			for (const foe of pokemon.side.foe.active) {
+				if (!foe || foe.fainted) continue;
+				if (foe.status === 'slp' || foe.getActiveAbilities(foe).includes('Comatose')) {
+					value.abilityModify(2, "Dreamcatcher");
+					break;
+				}
+			}
+		}
 
 		if (move.category !== 'Status') {
 			let auraBoosted = '';
 			let auraBroken = false;
 			for (const ally of pokemon.side.active) {
 				if (!ally || ally.fainted) continue;
-				let allyAbility = this.getAllyAbility(ally);
-				if (moveType === 'Fairy' && allyAbility === 'Fairy Aura') {
+				let allyAbilities = this.getAllyAbility(ally);
+				if (moveType === 'Fairy' && allyAbilities.includes('Fairy Aura')) {
 					auraBoosted = 'Fairy Aura';
-				} else if (moveType === 'Dark' && allyAbility === 'Dark Aura') {
+				} else if (moveType === 'Dark' && allyAbilities.includes('Dark Aura')) {
 					auraBoosted = 'Dark Aura';
-				} else if (allyAbility === 'Aura Break') {
+				} else if (allyAbilities.includes('Aura Break')) {
 					auraBroken = true;
-				} else if (allyAbility === 'Battery' && ally !== pokemon && move.category === 'Special') {
+				} else if (allyAbilities.includes('Battery') && ally !== pokemon && move.category === 'Special') {
 					value.modify(1.3, 'Battery');
-				} else if (allyAbility === 'Power Spot' && ally !== pokemon) {
+				} else if (allyAbilities.includes('Power Spot') && ally !== pokemon) {
 					value.modify(1.3, 'Power Spot');
-				} else if (allyAbility === 'Steely Spirit' && moveType === 'Steel') {
+				} else if (allyAbilities.includes('Steely Spirit') && moveType === 'Steel') {
 					value.modify(1.5, 'Steely Spirit');
 				}
 			}
 			for (const foe of pokemon.side.foe.active) {
 				if (!foe || foe.fainted) continue;
-				if (foe.ability === 'Fairy Aura' && moveType === 'Fairy') {
+				if (foe.getActiveAbilities(foe).includes('Fairy Aura') && moveType === 'Fairy') {
 					auraBoosted = 'Fairy Aura';
-				} else if (foe.ability === 'Dark Aura' && moveType === 'Dark') {
+				} else if (foe.getActiveAbilities(foe).includes('Dark Aura') && moveType === 'Dark') {
 					auraBoosted = 'Dark Aura';
-				} else if (foe.ability === 'Aura Break') {
+				} else if (foe.getActiveAbilities(foe).includes('Aura Break')) {
 					auraBroken = true;
 				}
 			}
@@ -2175,15 +2234,27 @@ class BattleTooltips {
 				allyAbility = Dex.abilities.get(this.battle.myPokemon[ally.slot].ability).name;
 			}
 		}
-		return allyAbility;
+		if (!this.battle.tier.includes('Elite Redux')) return allyAbility;
+		const innateList = [];
+		if (ally) {
+			const speciesForme = ally.getSpeciesForme() || ally?.speciesForme || '';
+			const species = this.battle.dex.species.get(speciesForme);
+			if (species.exists && species.abilities['I1']) {
+				if (species.abilities['I1']) innateList.push(species.abilities['I1']);
+				if (species.abilities['I2']) innateList.push(species.abilities['I2']);
+				if (species.abilities['I3']) innateList.push(species.abilities['I3']);
+			}
+		};
+		return [allyAbility, ...innateList];
 	}
 	getPokemonAbilityData(clientPokemon: Pokemon | null, serverPokemon: ServerPokemon | null | undefined) {
 		const abilityData: {ability: string, baseAbility: string, possibilities: string[]} = {
 			ability: '', baseAbility: '', possibilities: [],
 		};
+		const innateData = this.getPokemonInnateData(clientPokemon, serverPokemon).innates;
 		if (clientPokemon) {
-			if (clientPokemon.ability) {
-				abilityData.ability = clientPokemon.ability || clientPokemon.baseAbility;
+			if (clientPokemon.ability && !innateData.includes(clientPokemon.ability)) {
+				if (!innateData.includes(abilityData.ability)) abilityData.ability = clientPokemon.ability || clientPokemon.baseAbility;
 				if (clientPokemon.baseAbility) {
 					abilityData.baseAbility = clientPokemon.baseAbility;
 				}
@@ -2208,7 +2279,6 @@ class BattleTooltips {
 	} 
 	//Gets Elite Redux Innate Data
 	getPokemonInnateData(clientPokemon: Pokemon | null, serverPokemon: ServerPokemon | null | undefined) {
-		//Leaving innateData as object for future shenanegins
 		const innateData:  {innates: string[]} = {
 			innates: [],
 		};
@@ -2221,8 +2291,6 @@ class BattleTooltips {
 				if (species.abilities['I3']) innateData.innates.push(species.abilities['I3']);
 			}
 		};
-		console.log('innate data debug:');
-		console.table(innateData.innates);
 		return innateData;
 	}
 
@@ -2243,6 +2311,7 @@ class BattleTooltips {
 				const abilityName = Dex.abilities.get(abilityData.ability).name;
 				text = '<small>Ability:</small> ' + abilityName;
 				const baseAbilityName = Dex.abilities.get(abilityData.baseAbility).name;
+				//checks if new ability is an innate or not
 				if (baseAbilityName && baseAbilityName !== abilityName) text += ' (base: ' + baseAbilityName + ')';
 			}
 		}
@@ -2263,8 +2332,6 @@ class BattleTooltips {
 		if (innateData.innates.length) {
 			text = '<small>Innates:</small> ' + innateData.innates.join(', ');
 		}
-		console.log('innate text debug:');
-		console.log(text);
 		return text;
 	}
 	

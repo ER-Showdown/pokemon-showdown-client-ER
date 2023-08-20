@@ -608,7 +608,6 @@ abstract class BattleTypedSearch<T extends SearchType> {
 		}
 		if (format.includes('eliteredux')) {
 			this.dex = Dex.mod('gen8eliteredux' as ID);
-			console.log('gen8eliteredux' as ID);
 			this.formatType = 'eliteredux'
 		}
 		if (format.includes('doubles') && this.dex.gen > 4 && !this.formatType) this.formatType = 'doubles';
@@ -895,8 +894,6 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 	}
 	getBaseResults(): SearchRow[] {
 		const format = this.format;
-		console.log('format: ')
-		console.log(format);
 		if (!format) return this.getDefaultResults();
 		const isVGCOrBS = format.startsWith('battlespot') || format.startsWith('battlestadium') || format.startsWith('vgc');
 		let isDoublesOrBS = isVGCOrBS || this.formatType?.includes('doubles');
@@ -920,18 +917,13 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 			isDoublesOrBS = true;
 		} else if (dex.gen < 9 && !this.formatType) {
 			table = table['gen' + dex.gen];
-			console.log('normal gen table: ' + table) //debug
 		} else if (this.formatType?.startsWith('bdsp')) {
 			table = table['gen8' + this.formatType];
-			console.log('bdsp gen table: ' + table) //debug
 		} else if (this.formatType === 'eliteredux') {
 			table = table['gen8' + this.formatType];
-			console.log('eliteredux gen table: ') 
-			console.log(table)//debug
 		} else if (this.formatType === 'letsgo') {
 			table = table['gen7letsgo'];
 		} else if (this.formatType === 'natdex') {
-			console.log('natdex gen')
 			table = table['gen' + this.dex.gen + 'natdex'];
 		} else if (this.formatType === 'metronome') {
 			table = table['gen' + dex.gen + 'metronome'];
@@ -1034,7 +1026,6 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 		if (!filters) return true;
 		if (row[0] !== 'pokemon') return true;
 		const species = this.dex.species.get(row[1]);
-		console.log(species); //debug
 		for (const [filterType, value] of filters) {
 			switch (filterType) {
 			case 'type':
@@ -1099,7 +1090,6 @@ class BattleAbilitySearch extends BattleTypedSearch<'ability'> {
 		const isHackmons = (format.includes('hackmons') || format.endsWith('bh'));
 		const isAAA = (format === 'almostanyability' || format.includes('aaa'));
 		const isER = (format.includes('eliteredux'));
-		console.log(`isER: ${isER}, actual format: ${format as String}`);
 		const dex = this.dex;
 		let species = dex.species.get(this.species);
 		let abilitySet: SearchRow[] = [['header', "Abilities"]];
