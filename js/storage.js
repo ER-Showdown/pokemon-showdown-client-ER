@@ -53,7 +53,8 @@ Storage.bg = {
 			if (location.host === 'smogtours.psim.us') {
 				bgid = 'shaymin';
 			} else if (location.host === Config.routes.client) {
-				bgid = ['horizon', 'ocean', 'waterfall', 'shaymin', 'charizards', 'psday'][Math.floor(Math.random() * 6)];
+				// bgid = ['horizon', 'ocean', 'waterfall', 'shaymin', 'charizards', 'psday'][Math.floor(Math.random() * 6)];
+				bgid = ['lapras', 'flygon', 'kingdra', 'magmar', 'zangoose', 'electabuzz', 'meganium', 'rhyperior', 'pinsir', 'mudkip', 'torchic', 'treecko'];
 			} else {
 				$(document.body).css({
 					background: '',

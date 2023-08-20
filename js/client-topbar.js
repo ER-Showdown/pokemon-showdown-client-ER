@@ -800,12 +800,18 @@
 			buf += '<p><strong>Official</strong></p>';
 			buf += '<div class="bglist">';
 
-			buf += '<button name="setBg" value="charizards"' + (cur === 'charizards' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 0) + 'px"></span>Charizards</button>';
-			buf += '<button name="setBg" value="horizon"' + (cur === 'horizon' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 1) + 'px"></span>Horizon</button>';
-			buf += '<button name="setBg" value="waterfall"' + (cur === 'waterfall' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 2) + 'px"></span>Waterfall</button>';
-			buf += '<button name="setBg" value="ocean"' + (cur === 'ocean' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 3) + 'px"></span>Ocean</button>';
-			buf += '<button name="setBg" value="shaymin"' + (cur === 'shaymin' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 4) + 'px"></span>Shaymin</button>';
-			buf += '<button name="setBg" value="solidblue"' + (cur === 'solidblue' ? ' class="cur"' : '') + '><span class="bg" style="background: #344b6c"></span>Solid blue</button>';
+			buf += '<button name="setBg" value="lapras"' + (cur === 'lapras' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 0) + 'px"></span>Lapras</button>';
+			buf += '<button name="setBg" value="flygon"' + (cur === 'flygon' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 1) + 'px"></span>Flygon</button>';
+			buf += '<button name="setBg" value="kingdra"' + (cur === 'kingdra' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 2) + 'px"></span>Kingdra</button>';
+			buf += '<button name="setBg" value="magmar"' + (cur === 'magmar' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 3) + 'px"></span>Magmar</button>';
+			buf += '<button name="setBg" value="zangoose"' + (cur === 'zangoose' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 4) + 'px"></span>Zangoose</button>';
+			buf += '<button name="setBg" value="electabuzz"' + (cur === 'electabuzz' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 5) + 'px"></span>Electabuzz</button>';
+			buf += '<button name="setBg" value="meganium"' + (cur === 'meganium' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 6) + 'px"></span>Meganium</button>';
+			buf += '<button name="setBg" value="rhyperior"' + (cur === 'rhyperior' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 7) + 'px"></span>Rhyperior</button>';
+			buf += '<button name="setBg" value="pinsir"' + (cur === 'pinsir' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 8) + 'px"></span>Pinsir</button>';
+			buf += '<button name="setBg" value="mudkip"' + (cur === 'mudkip' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 9) + 'px"></span>Mudkip</button>';
+			buf += '<button name="setBg" value="torchic"' + (cur === 'torchic' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 10) + 'px"></span>Torchic</button>';
+			buf += '<button name="setBg" value="treecko"' + (cur === 'treecko' ? ' class="cur"' : '') + '><span class="bg" style="background-position:0 -' + (90 * 11) + 'px"></span>Treecko</button>';
 
 			buf += '</div><div style="clear:left"></div>';
 			buf += '<p><strong>Custom</strong></p>';

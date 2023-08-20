@@ -14,7 +14,7 @@ body {
 	font-family: Verdana, Helvetica, Arial, sans-serif;
 
 	/* see https://pokemonshowdown.com/credits */
-	background: #344b6c url(../fx/client-bg-charizards.jpg) no-repeat left center fixed;
+	background: #344b6c url(../fx/client-bg-lapras.jpg) no-repeat left center fixed;
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -1255,27 +1255,29 @@ p.or:after {
 }
 .roomcounters .usercount {
 	display: block;
-	width: 49px;
-	height: 63px;
+	width: 70px;
+	height: 80px;
 	position: absolute;
-	left: -30px;
+	left: -40px;
 	bottom: -5px;
-	background: url(https://play.pokemonshowdown.com/sprites/gen5/meloetta.png) center no-repeat;
+	background: url(/sprites/gen5/flygon.png) center no-repeat;
 }
 .roomcounters button:hover .usercount {
-	background: url(https://play.pokemonshowdown.com/sprites/gen5ani/meloetta.gif) center no-repeat;
+	background: url(/sprites/gen5ani/flygon.gif) center no-repeat;
 }
 .roomcounters .battlecount {
 	display: block;
-	width: 46px;
-	height: 76px;
+	width: 56px;
+	height: 86px;
 	position: absolute;
 	right: -30px;
+	transform: scaleX(-1);
 	bottom: -10px;
-	background: url(https://play.pokemonshowdown.com/sprites/gen5/meloetta-pirouette.png) center no-repeat;
+	background: url(/sprites/gen5/kingdra.png) center no-repeat;
 }
 .roomcounters button:hover .battlecount {
-	background: url(https://play.pokemonshowdown.com/sprites/gen5ani/meloetta-pirouette.gif) center no-repeat;
+	transform: scaleX(-1);
+	background: url(/sprites/gen5ani/kingdra.gif) center no-repeat;
 }
 
 .roomlist {
