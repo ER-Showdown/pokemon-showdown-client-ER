@@ -1573,6 +1573,9 @@ class BattleTooltips {
 			if (isSound && value.abilityModify(0, 'Liquid Voice')) {
 				moveType = 'Water';
 			}
+			if (isSound && value.abilityModify(0, 'Sand Song')) {
+				moveType = 'Ground';
+			}
 		}
 
 		if (move.id === 'photongeyser' || move.id === 'lightthatburnsthesky' ||
