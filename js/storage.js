@@ -87,7 +87,7 @@ Storage.bg = {
 
 		if (!hues) {
 			switch (bgid) {
-			case 'horizon':
+			case 'lapras':
 				hues = ["318.87640449438203,35.177865612648226%", "216,46.2962962962963%", "221.25,32.25806451612904%", "197.8021978021978,52.60115606936417%", "232.00000000000003,19.480519480519483%", "228.38709677419354,60.7843137254902%"];
 				attrib = '<a href="https://vtas.deviantart.com/art/Pokemon-Horizon-312267168" target="_blank" class="subtle">"Horizon" <small>background by Vivian Zou</small></a>';
 				break;
