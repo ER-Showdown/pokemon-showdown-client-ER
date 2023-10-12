@@ -949,7 +949,7 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 		}
 		let tierSet: SearchRow[] = table.tierSet;
 		let slices: {[k: string]: number} = table.formatSlices;
-		if (format === 'ubers' || format === 'uber') tierSet = tierSet.slice(slices.Uber);
+		if (format.endsWith('ubers') || format.endsWith('uber')) tierSet = tierSet.slice(slices.Uber);
 		else if (isVGCOrBS) {
 			if (format.endsWith('series13')) {
 				// Show Mythicals
@@ -961,12 +961,12 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 			} else {
 				tierSet = tierSet.slice(slices.Regular);
 			}
-		} else if (format === 'ou') tierSet = tierSet.slice(slices.OU);
-		else if (format === 'uu') tierSet = tierSet.slice(slices.UU);
-		else if (format === 'ru') tierSet = tierSet.slice(slices.RU || slices.UU);
-		else if (format === 'nu') tierSet = tierSet.slice(slices.NU || slices.RU || slices.UU);
-		else if (format === 'pu') tierSet = tierSet.slice(slices.PU || slices.NU);
-		else if (format === 'zu') tierSet = tierSet.slice(slices.ZU || slices.PU || slices.NU);
+		} else if (format.endsWith('ou')) tierSet = tierSet.slice(slices.OU);
+		else if (format.endsWith('uu')) tierSet = tierSet.slice(slices.UU);
+		else if (format.endsWith('ru')) tierSet = tierSet.slice(slices.RU || slices.UU);
+		else if (format.endsWith('nu')) tierSet = tierSet.slice(slices.NU || slices.RU || slices.UU);
+		else if (format.endsWith('pu')) tierSet = tierSet.slice(slices.PU || slices.NU);
+		else if (format.endsWith('zu')) tierSet = tierSet.slice(slices.ZU || slices.PU || slices.NU);
 		else if (format === 'lc' || format === 'lcuu' || format.startsWith('lc') || (format !== 'caplc' && format.endsWith('lc'))) tierSet = tierSet.slice(slices.LC);
 		else if (format === 'cap') tierSet = tierSet.slice(0, slices.AG || slices.Uber).concat(tierSet.slice(slices.OU));
 		else if (format === 'caplc') {
