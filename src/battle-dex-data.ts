@@ -1147,6 +1147,9 @@ interface MoveFlags {
 	kick?: 1 | 0;
 	//Ignores immunity and Tinted Lens effect with Bone Zone
 	bone?: 1 | 0; 
+	//Boosted by Mighty Horn and increases attack with Hardened Sheath
+	horn?: 1 | 0
+
 }
 
 type MoveTarget = 'normal' | 'any' | 'adjacentAlly' | 'adjacentFoe' | 'adjacentAllyOrSelf' | // single-target

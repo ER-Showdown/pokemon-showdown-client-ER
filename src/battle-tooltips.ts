@@ -89,7 +89,7 @@ class ModifiableValue {
 		else if (weatherName !== this.weatherName) return false;
 		for (const side of this.battle.sides) {
 			for (const active of side.active) {
-				if (active && ['Air Lock', 'Cloud Nine'].includes(active.ability)) {
+				if (active && ['Air Lock', 'Cloud Nine', 'Clueless'].includes(active.ability)) {
 					this.comment.push(` (${weatherName} suppressed by ${active.ability})`);
 					return false;
 				}
@@ -776,6 +776,9 @@ class BattleTooltips {
 			if (move.flags.wind) {
 				text += `<p class="movetag">&#x2713; Wind <small>(activates Wind Power and Wind Rider)</small></p>`;
 			}
+			if (move.flags.horn) {
+				text += `<p class="movetag">&#x2713; Horn <small>(boosted by Mighty Horn)</small></p>`;
+			}
 		}
 		return text;
 	}
@@ -1116,7 +1119,7 @@ class BattleTooltips {
 		}
 
 		let weather = this.battle.weather;
-		if (this.battle.abilityActive(['Air Lock', 'Cloud Nine'])) {
+		if (this.battle.abilityActive(['Air Lock', 'Cloud Nine', 'Clueless'])) {
 			weather = '' as ID;
 		}
 
@@ -1653,6 +1656,10 @@ class BattleTooltips {
 		} else if (value.tryAbility('Compound Eyes')) {
 			accuracyModifiers.push(5325);
 			value.abilityModify(1.3, "Compound Eyes");
+		} else if (value.tryAbility("Radiance")) {
+			accuracyModifiers.push(4505);
+			value.abilityModify(1.1, "Radiance");
+
 		}
 
 		if (value.tryItem('Wide Lens')) {
@@ -1958,6 +1965,9 @@ class BattleTooltips {
 		if (move.flags['wind']) {
 			value.abilityModify(1.25, "Giant Wings");
 		}
+		if (move.flags['horn']) {
+			value.abilityModify(1.3, "Mighty Horn");
+		}
 		for (let i = 1; i <= 5 && i <= pokemon.side.faintCounter; i++) {
 			if (pokemon.volatiles[`fallen${i}`]) {
 				value.abilityModify(1 + 0.1 * i, "Supreme Overlord");
@@ -1980,19 +1990,23 @@ class BattleTooltips {
 			!move.id.startsWith('hiddenpower')
 		) {
 			if (move.type === 'Normal') {
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Aerilate");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Galvanize");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Pixilate");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Refrigerate");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Crystallize");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Burnate");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Fighting Spirit");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Groundate");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Hydrate");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Poisonate");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Buginize");
-				value.abilityModify(this.battle.gen > 6 ? 1.2 : 1.3, "Solar Flare");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Aerilate");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Galvanize");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Pixilate");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Refrigerate");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Immolate");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Fighting Spirit");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Tectonize");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Hydrate");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Intoxicate");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Pollinate");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Solar Flare");
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Mineralize");
 
+
+			}
+			if (move.type === "Rock") {
+				value.abilityModify(this.battle.gen > 6 ? 1.1 : 1.3, "Crystallize");
 			}
 			if (this.battle.gen > 6) {
 				value.abilityModify(1.2, "Normalize");
