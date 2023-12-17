@@ -882,16 +882,17 @@ export class BattleScene implements BattleSceneStub {
 
 	pseudoWeatherLeft(pWeather: WeatherState) {
 		let buf = '<br />' + Dex.moves.get(pWeather[0]).name;
+		const nullifyPseudoWeather = this.battle.abilityActive('Clueless');
 		if (!pWeather[1] && pWeather[2]) {
 			pWeather[1] = pWeather[2];
 			pWeather[2] = 0;
 		}
 		if (this.battle.gen < 7 && this.battle.hardcoreMode) return buf;
 		if (pWeather[2]) {
-			return buf + ' <small>(' + pWeather[1] + ' or ' + pWeather[2] + ' turns)</small>';
+			return `${nullifyPseudoWeather ? '<s>' : ''}` + buf + ' <small>(' + pWeather[1] + ' or ' + pWeather[2] + ' turns)</small>' + `${nullifyPseudoWeather ? '</s>' : ''}`;
 		}
 		if (pWeather[1]) {
-			return buf + ' <small>(' + pWeather[1] + ' turn' + (pWeather[1] === 1 ? '' : 's') + ')</small>';
+			return `${nullifyPseudoWeather ? '<s>' : ''}` + buf + ' <small>(' + pWeather[1] + ' turn' + (pWeather[1] === 1 ? '' : 's') + ')</small>' + `${nullifyPseudoWeather ? '</s>' : ''}`;
 		}
 		return buf; // weather not found
 	}
@@ -932,7 +933,7 @@ export class BattleScene implements BattleSceneStub {
 			} else if (this.battle.weatherTimeLeft !== 0) {
 				weatherhtml += ` <small>(${this.battle.weatherTimeLeft} turn${this.battle.weatherTimeLeft === 1 ? '' : 's'})</small>`;
 			}
-			const nullifyWeather = this.battle.abilityActive(['Air Lock', 'Cloud Nine']);
+			const nullifyWeather = this.battle.abilityActive(['Air Lock', 'Cloud Nine', 'Clueless']);
 			weatherhtml = `${nullifyWeather ? '<s>' : ''}${weatherhtml}${nullifyWeather ? '</s>' : ''}`;
 		}
 
@@ -961,7 +962,7 @@ export class BattleScene implements BattleSceneStub {
 		if (!this.animating) return;
 		let isIntense = false;
 		let weather = this.battle.weather;
-		if (this.battle.abilityActive(['Air Lock', 'Cloud Nine'])) {
+		if (this.battle.abilityActive(['Air Lock', 'Cloud Nine', 'Clueless'])) {
 			weather = '' as ID;
 		}
 		let terrain = '' as ID;
