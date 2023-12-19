@@ -1801,6 +1801,11 @@ class BattleTooltips {
 				value.modify(2, move.name + ' + Poison');
 			}
 		}
+		if(['plasmapulse'].includes(move.id) && target) {
+			if (target.status) {
+				value.modify(2, move.name + "+ Electric")
+			}
+		}
 		if (move.id === 'wakeupslap' && target) {
 			if (target.status === 'slp') {
 				value.modify(2, 'Wake-Up Slap + Sleep');
