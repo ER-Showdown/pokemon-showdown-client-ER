@@ -1,4 +1,3 @@
-/sprites/
 /audio/
 /config/
 /index.php
@@ -91,5 +90,3 @@ fx/weather-wonderroom.png
 fx/web.png
 fx/wisp.png
 fx/z-symbol.png
-sprites/gallery-test.html
-sprites/scene-test.html
