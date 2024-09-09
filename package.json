@@ -6,14 +6,15 @@
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Zarel/Pokemon-Showdown-Client.git"
+    "url": "https://github.com/ER-Showdown/pokemon-showdown-client-ER"
   },
   "scripts": {
     "lint": "eslint --config=.eslintrc.js --cache --cache-file=eslint-cache/base js/ && eslint --config=build-tools/.eslintrc.js --cache --cache-file=eslint-cache/build build-tools/update build-tools/build-indexes && tslint --project .",
     "test": "npm run lint && tsc && node build && mocha test/*.js",
     "fix": "eslint --config=.eslintrc.js --fix js/ && eslint --config=build-tools/.eslintrc.js --fix build-tools/update build-tools/build-indexes",
-    "build": "node build",
-    "build-full": "node build full"
+    "build": "node build && tsc",
+    "build-full": "node build full",
+    "build-http": "node build && tsc && npx http-server"
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
