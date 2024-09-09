@@ -627,7 +627,7 @@ const Dex = new class implements ModdedDex {
 		}
 
 		if (animationData[facing + 'f'] && options.gender === 'F') facing += 'f';
-		let allowAnim = !Dex.prefs('noanim');
+		let allowAnim = false;
 		if (allowAnim && spriteData.gen >= 6) spriteData.pixelated = false;
 		if (allowAnim && animationData[facing] && spriteData.gen >= 5) {
 			if (facing.slice(-1) === 'f') name += '-f';

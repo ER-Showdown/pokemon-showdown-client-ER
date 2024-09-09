@@ -1951,7 +1951,6 @@ export class PokemonSprite extends Sprite {
 	}
 	animSub(instant?: boolean) {
 		const noAnim = true;
-
 		if (!this.scene.animating) return;
 		if (this.$sub) return;
 		const subsp = Dex.getSpriteData('substitute', this.isFrontSprite, {
