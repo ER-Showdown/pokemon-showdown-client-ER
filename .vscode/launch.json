@@ -2,22 +2,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Chrome: Test Client Beta (Preact)",
-            "port": 9222,
+            "name": "[DEV]: Start Server (Google Chrome)",
+            "type": "chrome",
+            "url": "http://localhost:8080/testclient.html?~~localhost:8000",
             "request": "launch",
-            "url": "${config:showdown.clientUrl}/testclient-beta.html${config:showdown.server}",
-            "type": "pwa-chrome",
-            "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "npm: build"
-        },
-        {
-            "name": "Chrome: Test Client",
-            "port": 9222,
-            "request": "launch",
-            "url": "${config:showdown.clientUrl}/testclient.html${config:showdown.server}",
-            "type": "pwa-chrome",
-            "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "npm: build"
+            "preLaunchTask": "Start TSC Watcher",
+            "postDebugTask": "Terminate All Tasks",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "/data/*.ts": "${workspaceFolder}/src/*.ts",
+                "/*.ts": "${workspaceFolder}/src/*.ts",
+            }
         }
     ]
 } 

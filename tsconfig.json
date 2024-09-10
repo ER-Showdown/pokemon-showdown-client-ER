@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "lib": ["dom", "es6", "es2016.array.include", "es2017.object"],
+        "sourceMap": true,
         "noEmit": true,
         "target": "esnext",
         "module": "None",
