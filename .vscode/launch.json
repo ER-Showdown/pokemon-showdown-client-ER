@@ -1,8 +1,14 @@
+/**
+* VSCode seems to limit an internal browser debugging session to one tab for the same url.
+* Unfortunately, that means it's not easy to create a native config that will launch two tabs.
+* To get around this, we use the node script start_browsers.js which runs chrome cli to spawn two tabs.
+* More information can be found inside the start_browsers.js script.
+*/
 {
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "[DEV]: Start Server (Google Chrome)",
+            "name": "[DEV]: Singular Session (Chrome)",
             "type": "chrome",
             "url": "http://localhost:8080/testclient.html?~~localhost:8000",
             "request": "launch",
@@ -12,7 +18,45 @@
             "sourceMapPathOverrides": {
                 "/data/*.ts": "${workspaceFolder}/src/*.ts",
                 "/*.ts": "${workspaceFolder}/src/*.ts",
-            }
+            },
+        },
+        {
+            "name": "[BROWSER] Player 1 Session",
+            "request": "attach",
+            "type": "chrome",
+            "port": 9200,
+            "url": "http://localhost:8080/testclient.html?~~localhost:8000&username=${config:showdown.player1Name}",
+            "presentation": {
+                "hidden": true,
+                "group": "",
+                "order": 1
+            },
+            "suppressMultipleSessionWarning": true,
+        },
+        {
+            "name": "[BROWSER] Player 2 Session",
+            "request": "attach",
+            "type": "chrome",
+            "port": 9200,
+            "url": "http://localhost:8080/testclient.html?~~localhost:8000&username=${config:showdown.player2Name}",
+            "presentation": {
+                "hidden": true,
+                "group": "",
+                "order": 1
+            },
+            "suppressMultipleSessionWarning": true,
+        },
+    ],
+    "compounds": [
+        {
+            "name": "[DEV] Battle Debugging",
+            "configurations": [
+                "[BROWSER] Player 1 Session",
+                "[BROWSER] Player 2 Session"
+            ],
+            "preLaunchTask": "Launch Browser Tabs",
+            "postDebugTask": "Terminate All Tasks",
+            "stopAll": true,
         }
     ]
 } 

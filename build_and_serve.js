@@ -1,4 +1,4 @@
-var { execSync, spawn } = require("child_process");
+var { spawn } = require("child_process");
 
 async function pipeOutput(child) {
 	return new Promise((res, rej) => {

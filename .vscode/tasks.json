@@ -14,7 +14,25 @@
                 "background": {
                     "activeOnStart": true,
                     "beginsPattern": "^.*[nodemon] starting.*",
-                    "endsPattern": "^.*Hit CTRL-C to stop the server.*"
+                    "endsPattern": "^.*Hit CTRL-C to stop the server.*",
+                }
+            }
+        },
+        {
+            "label": "Launch Browser Tabs",
+            "type": "shell",
+            "command": "node ${workspaceFolder}/start_browsers.js --user1 ${config:showdown.player1Name} --user2 ${config:showdown.player2Name}",
+            "dependsOn": "Start TSC Watcher",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": {
+                    "regexp": "^$",
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "starting showdown browser tabs for two player battle testing",
+                    "endsPattern": "using chrome binary at",
                 }
             }
         },
