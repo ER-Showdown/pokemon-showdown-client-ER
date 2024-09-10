@@ -154,8 +154,8 @@ export class BattleScene implements BattleSceneStub {
 		this.$bgEffect = $('<div></div>');
 		this.$sprite = $('<div></div>');
 
-		this.$sprites = [$('<div></div>'), $('<div></div>')];
-		this.$spritesFront = [$('<div></div>'), $('<div></div>')];
+		this.$sprites = [$('<div class="sprite-back-0"></div>'), $('<div class="sprite-back-1"></div>')];
+		this.$spritesFront = [$('<div class="sprite-front-0"></div>'), $('<div class="sprite-front-1"></div>')];
 
 		this.$sprite.append(this.$sprites[1]);
 		this.$sprite.append(this.$spritesFront[1]);
@@ -163,7 +163,7 @@ export class BattleScene implements BattleSceneStub {
 		this.$sprite.append(this.$sprites[0]);
 
 		this.$stat = $('<div role="complementary" aria-label="Active Pokemon"></div>');
-		this.$fx = $('<div></div>');
+		this.$fx = $('<div class="fx-container"></div>');
 		this.$leftbar = $('<div class="leftbar" role="complementary" aria-label="Your Team"></div>');
 		this.$rightbar = $('<div class="rightbar" role="complementary" aria-label="Opponent\'s Team"></div>');
 		this.$turn = $('<div></div>');
@@ -1950,7 +1950,7 @@ export class PokemonSprite extends Sprite {
 		}, sp));
 	}
 	animSub(instant?: boolean) {
-		const noAnim = true;
+		const noAnim = false;
 		if (!this.scene.animating) return;
 		if (this.$sub) return;
 		const subsp = Dex.getSpriteData('substitute', this.isFrontSprite, {

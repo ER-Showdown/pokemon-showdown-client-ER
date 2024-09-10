@@ -110,7 +110,7 @@
 		focus: function (e) {
 			this.tooltips.hideTooltip();
 			if (this.battle.paused && !this.battlePaused) {
-				const noAnim = true;
+				var noAnim = false;
 				if (noAnim) this.battle.seekTurn(Infinity);
 				this.battle.play();
 			}
@@ -219,7 +219,7 @@
 				}
 			}
 			this.battle.add();
-			var noAnim = true;
+			var noAnim = false;
 			if (noAnim) this.battle.seekTurn(Infinity);
 			this.updateControls();
 		},
