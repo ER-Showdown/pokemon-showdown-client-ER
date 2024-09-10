@@ -47,7 +47,7 @@
 				buf += '<p><label class="label" name="partner" style="display:none">';
 				buf += 'Partner: <input name="teammate" /></label></p>';
 				buf += '<p><label class="checkbox"><input type="checkbox" name="private" ' + (Storage.prefs('disallowspectators') ? 'checked' : '') + ' /> <abbr title="You can still invite spectators by giving them the URL or using the /invite command">Don\'t allow spectators</abbr></label></p>';
-				buf += '<p><button class="button mainmenu1 big" name="search"><strong>Battle!</strong><br /><small>Find a random opponent</small></button></p></form></div>';
+				buf += '<p><button class="button mainmenu1 big" name="search"><strong>Battle test change!</strong><br /><small>Find a random opponent</small></button></p></form></div>';
 			}
 
 			buf += '<div class="menugroup">';

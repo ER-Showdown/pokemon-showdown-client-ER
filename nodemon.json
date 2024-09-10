@@ -1,0 +1,17 @@
+{
+  "watch": ["src/", "js/"],
+  "ext": "js,ts",
+  "verbose": true,
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "js/lib/**",
+    "js/server/**",
+    "js/battle*",
+    "js/client-co*",
+    "js/client-main.js",
+    "js/client-main.js.map",
+    "js/panel*",
+    "js/replay-embed.js"
+  ]
+}

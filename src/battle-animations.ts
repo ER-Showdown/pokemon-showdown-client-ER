@@ -1920,6 +1920,7 @@ export class PokemonSprite extends Sprite {
 	}
 
 	behindx(offset: number) {
+		console.debug("test");
 		return this.x + (this.isFrontSprite ? 1 : -1) * offset;
 	}
 	behindy(offset: number) {

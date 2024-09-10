@@ -14,7 +14,7 @@
     "fix": "eslint --config=.eslintrc.js --fix js/ && eslint --config=build-tools/.eslintrc.js --fix build-tools/update build-tools/build-indexes",
     "build": "node build && tsc",
     "build-full": "node build full",
-    "build-http": "node build && tsc --build --force && npx http-server"
+    "serve": "nodemon ./build_and_serve.js"
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
@@ -32,8 +32,10 @@
     "@types/mocha": "^5.2.6",
     "eslint": "^5.16.0",
     "mocha": "^6.0.2",
+    "nodemon": "^3.1.4",
     "preact": "^8.3.1",
     "source-map": "^0.7.3",
+    "tsc-watch": "^6.2.0",
     "tslint": "^5.20.1",
     "typescript": "^4.9.5"
   },
