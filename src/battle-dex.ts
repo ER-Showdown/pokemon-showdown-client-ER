@@ -483,6 +483,7 @@ const Dex = new class implements ModdedDex {
 		mod?: string,
 		dynamax?: boolean,
 	} = {gen: 6}) {
+		console.log("reaching part 1")
 		const mechanicsGen = options.gen || 6;
 		let isDynamax = !!options.dynamax;
 		if (pokemon instanceof Pokemon) {
@@ -661,7 +662,7 @@ const Dex = new class implements ModdedDex {
 				// old gen backsprites are multiplied by 1.5x by the 3D engine
 				spriteData.w *= 2 / 1.5;
 				spriteData.h *= 2 / 1.5;
-				spriteData.y += -11;
+				spriteData.y += -13;
 			}
 			if (spriteData.gen <= 2) spriteData.y += 2;
 		}
@@ -674,7 +675,9 @@ const Dex = new class implements ModdedDex {
 			spriteData.h *= 1.5;
 			spriteData.y += -11;
 		}
-
+		if(!spriteData.isFrontSprite){
+			spriteData.y += 15;
+		}
 		return spriteData;
 	}
 
@@ -734,7 +737,7 @@ const Dex = new class implements ModdedDex {
 		let top = Math.floor(num / 12) * 30;
 		let left = (num % 12) * 40;
 		let fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ? `;opacity:.3;filter:grayscale(100%) brightness(.5)` : ``);
-		
+
 		return `background:transparent url(${Dex.resourcePrefix}sprites/pokemon_icons/${id}_icon.png) no-repeat scroll ${fainted}`;
 	}
 
