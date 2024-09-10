@@ -1949,7 +1949,8 @@ export class PokemonSprite extends Sprite {
 			opacity: (this.$sub ? .3 : 1),
 		}, sp));
 	}
-	animSub(instant?: boolean, noAnim?: boolean) {
+	animSub(instant?: boolean) {
+		const noAnim = true;
 		if (!this.scene.animating) return;
 		if (this.$sub) return;
 		const subsp = Dex.getSpriteData('substitute', this.isFrontSprite, {
@@ -2271,7 +2272,7 @@ export class PokemonSprite extends Sprite {
 		this.scene.waitFor(this.$el);
 
 		if (pokemon.hasVolatile('substitute' as ID)) {
-			this.animSub(true, true);
+			this.animSub(true);
 			this.$sub!.css(this.scene.pos({
 				x: this.x,
 				y: this.y,

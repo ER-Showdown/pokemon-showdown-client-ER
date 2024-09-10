@@ -309,17 +309,17 @@ var updatePrefs = function () {
 		Storage.prefs('showjoins', showjoins, true);
 	}
 
-	var isChrome64 = navigator.userAgent.includes(' Chrome/64.');
-	if (Storage.prefs('nogif') !== undefined) {
-		if (!isChrome64) {
-			Storage.prefs('nogif', null);
-		}
-	} else if (isChrome64) {
-		Storage.prefs('nogif', true);
-		Storage.whenAppLoaded(function () {
-			app.addPopupMessage('Your version of Chrome has a bug that makes animated GIFs freeze games sometimes, so certain animations have been disabled. Only some people have the problem, so you can experiment and enable them in the Options menu setting "Disable GIFs for Chrome 64 bug".');
-		});
-	}
+	// var isChrome64 = navigator.userAgent.includes(' Chrome/64.');
+	// if (Storage.prefs('nogif') !== undefined) {
+	// 	if (!isChrome64) {
+	// 		Storage.prefs('nogif', null);
+	// 	}
+	// } else if (isChrome64) {
+	// 	Storage.prefs('nogif', true);
+	// 	Storage.whenAppLoaded(function () {
+	// 		app.addPopupMessage('Your version of Chrome has a bug that makes animated GIFs freeze games sometimes, so certain animations have been disabled. Only some people have the problem, so you can experiment and enable them in the Options menu setting "Disable GIFs for Chrome 64 bug".');
+	// 	});
+	// }
 
 	var colorSchemeQuerySupported = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').media !== 'not all';
 	if (Storage.prefs('theme') === 'system' && !colorSchemeQuerySupported) {

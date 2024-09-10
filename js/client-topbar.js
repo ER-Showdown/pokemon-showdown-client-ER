@@ -450,8 +450,8 @@
 			this.update();
 		},
 		events: {
-			'change input[name=noanim]': 'setNoanim',
-			'change input[name=nogif]': 'setNogif',
+			// 'change input[name=noanim]': 'setNoanim',
+			// 'change input[name=nogif]': 'setNogif',
 			'change input[name=bwgfx]': 'setBwgfx',
 			'change input[name=nopastgens]': 'setNopastgens',
 			'change select[name=tournaments]': 'setTournaments',
@@ -502,10 +502,10 @@
 				buf += '<p><label class="optlabel">Layout: <select name="onepanel"><option value=""' + (!onePanel ? ' selected="selected"' : '') + '>&#x25EB; Left and right panels</option><option value="1"' + (onePanel ? ' selected="selected"' : '') + '>&#x25FB; Single panel</option></select></label></p>';
 			}
 			buf += '<p><label class="optlabel">Background: <button name="background">Change background</button></label></p>';
-			buf += '<p><label class="optlabel"><input type="checkbox" name="noanim"' + (Dex.prefs('noanim') ? ' checked' : '') + ' /> Disable animations</label></p>';
-			if (navigator.userAgent.includes(' Chrome/64.')) {
-				buf += '<p><label class="optlabel"><input type="checkbox" name="nogif"' + (Dex.prefs('nogif') ? ' checked' : '') + ' /> Disable GIFs for Chrome 64 bug</label></p>';
-			}
+			// buf += '<p><label class="optlabel"><input type="checkbox" name="noanim"' + (Dex.prefs('noanim') ? ' checked' : '') + ' /> Disable animations</label></p>';
+			// if (navigator.userAgent.includes(' Chrome/64.')) {
+			// 	buf += '<p><label class="optlabel"><input type="checkbox" name="nogif"' + (Dex.prefs('nogif') ? ' checked' : '') + ' /> Disable GIFs for Chrome 64 bug</label></p>';
+			// }
 			buf += '<p><label class="optlabel"><input type="checkbox" name="bwgfx"' + (Dex.prefs('bwgfx') ? ' checked' : '') + ' /> Use BW sprites instead of XY models</label></p>';
 			buf += '<p><label class="optlabel"><input type="checkbox" name="nopastgens"' + (Dex.prefs('nopastgens') ? ' checked' : '') + ' /> Use modern sprites for past generations</label></p>';
 
@@ -579,16 +579,16 @@
 			}
 			Storage.prefs('logchat', logchat);
 		},
-		setNoanim: function (e) {
-			var noanim = !!e.currentTarget.checked;
-			Storage.prefs('noanim', noanim);
-			Dex.loadSpriteData(noanim || Dex.prefs('bwgfx') ? 'bw' : 'xy');
-		},
-		setNogif: function (e) {
-			var nogif = !!e.currentTarget.checked;
-			Storage.prefs('nogif', nogif);
-			Dex.loadSpriteData(nogif || Dex.prefs('bwgfx') ? 'bw' : 'xy');
-		},
+		// setNoanim: function (e) {
+		// 	var noanim = !!e.currentTarget.checked;
+		// 	Storage.prefs('noanim', noanim);
+		// 	Dex.loadSpriteData(noanim || Dex.prefs('bwgfx') ? 'bw' : 'xy');
+		// },
+		// setNogif: function (e) {
+		// 	var nogif = !!e.currentTarget.checked;
+		// 	Storage.prefs('nogif', nogif);
+		// 	Dex.loadSpriteData(nogif || Dex.prefs('bwgfx') ? 'bw' : 'xy');
+		// },
 		setTheme: function (e) {
 			var theme = e.currentTarget.value;
 			Storage.prefs('theme', theme);
@@ -604,7 +604,8 @@
 		setBwgfx: function (e) {
 			var bwgfx = !!e.currentTarget.checked;
 			Storage.prefs('bwgfx', bwgfx);
-			Dex.loadSpriteData(bwgfx || Dex.prefs('noanim') ? 'bw' : 'xy');
+			var noAnim = true;
+			Dex.loadSpriteData(bwgfx || noAnim ? 'bw' : 'xy');
 		},
 		setNopastgens: function (e) {
 			var nopastgens = !!e.currentTarget.checked;

@@ -110,7 +110,8 @@
 		focus: function (e) {
 			this.tooltips.hideTooltip();
 			if (this.battle.paused && !this.battlePaused) {
-				if (Dex.prefs('noanim')) this.battle.seekTurn(Infinity);
+				const noAnim = true;
+				if (noAnim) this.battle.seekTurn(Infinity);
 				this.battle.play();
 			}
 			ConsoleRoom.prototype.focus.call(this, e);
@@ -218,7 +219,8 @@
 				}
 			}
 			this.battle.add();
-			if (Dex.prefs('noanim')) this.battle.seekTurn(Infinity);
+			var noAnim = true;
+			if (noAnim) this.battle.seekTurn(Infinity);
 			this.updateControls();
 		},
 		toggleMessages: function (user) {

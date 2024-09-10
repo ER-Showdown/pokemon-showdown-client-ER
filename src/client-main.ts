@@ -33,15 +33,6 @@ class PSPrefs extends PSStreamModel<string | null> {
 	 */
 	theme: 'light' | 'dark' | 'system' = 'light';
 	/**
-	 * Disables animated GIFs, but keeps other animations enabled.
-	 * Workaround for a Chrome 64 bug with GIFs.
-	 * true - Disable GIFs, will be automatically re-enabled if you
-	 *   switch away from Chrome 64.
-	 * false - Enable GIFs all the time.
-	 * null - Enable GIFs only on Chrome 64.
-	 */
-	nogif: boolean | null = null;
-	/**
 	 * Show "User joined" and "User left" messages. serverid:roomid
 	 * table. Uses 1 and 0 instead of true/false for JSON packing
 	 * reasons.
@@ -117,16 +108,6 @@ class PSPrefs extends PSStreamModel<string | null> {
 			delete newPrefs['showroomjoins'];
 			showjoins[Config.server.id] = serverShowjoins;
 			newPrefs['showjoins'] = showjoins;
-		}
-
-		const isChrome64 = navigator.userAgent.includes(' Chrome/64.');
-		if (newPrefs['nogif'] !== undefined) {
-			if (!isChrome64) {
-				delete newPrefs['nogif'];
-			}
-		} else if (isChrome64) {
-			newPrefs['nogif'] = true;
-			alert('Your version of Chrome has a bug that makes animated GIFs freeze games sometimes, so certain animations have been disabled. Only some people have the problem, so you can experiment and enable them in the Options menu setting "Disable GIFs for Chrome 64 bug".');
 		}
 
 		const colorSchemeQuerySupported = window.matchMedia?.('(prefers-color-scheme: dark)').media !== 'not all';
