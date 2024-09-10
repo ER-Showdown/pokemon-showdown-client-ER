@@ -14,7 +14,7 @@
     "fix": "eslint --config=.eslintrc.js --fix js/ && eslint --config=build-tools/.eslintrc.js --fix build-tools/update build-tools/build-indexes",
     "build": "node build && tsc",
     "build-full": "node build full",
-    "build-http": "node build && tsc --build --force && npx http-server"
+    "build-http": "node build && tsc --build --force && npx http-server -c-1"
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
