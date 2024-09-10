@@ -1,20 +1,26 @@
 var { execSync, spawn } = require("child_process");
 
-execSync("npm run build");
+async function pipeOutput(child) {
+	return new Promise((res, rej) => {
+		//spit stdout to screen
+		child.stdout.on("data", function (data) {
+			process.stdout.write(data.toString());
+		});
 
-//kick off process of listing files
-var child = spawn("npx", ["http-server", "-c-1"], { shell: true });
+		//spit stderr to screen
+		child.stderr.on("data", function (data) {
+			process.stdout.write(data.toString());
+		});
 
-//spit stdout to screen
-child.stdout.on("data", function (data) {
-	process.stdout.write(data.toString());
-});
+		child.on("close", function (code) {
+			res(code);
+		});
+	});
+}
 
-//spit stderr to screen
-child.stderr.on("data", function (data) {
-	process.stdout.write(data.toString());
-});
+async function main() {
+	await pipeOutput(spawn("npm", ["run", "build"], { shell: true }));
+	await pipeOutput(spawn("npx", ["http-server", "-c-1"], { shell: true }));
+}
 
-child.on("close", function (code) {
-	console.log("Finished with code " + code);
-});
+main().then(() => process.exit(0));
