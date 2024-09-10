@@ -1,5 +1,6 @@
 /audio/
-/config/
+/config/config.js
+/config/testclient-key.js
 /index.php
 /index.html
 /preactalpha.html

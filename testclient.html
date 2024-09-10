@@ -124,6 +124,8 @@
 		<script src="js/search.js"></script>
 
 		<script src="data/aliases.js" async="async" onerror="loadRemoteData(this.src)"></script>
+		<!-- Order matters here as our dev username bootstrapper requires jQuery and the app.user model to be defined. -->
+		<script src="config/er-config.js"></script>
 
 		<script>
 			window.onload = () => {

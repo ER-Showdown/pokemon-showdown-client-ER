@@ -1,5 +1,5 @@
 {
-  "watch": ["src/", "js/"],
+  "watch": ["src/", "js/", "config/"],
   "ext": "js,ts,css,html,json,tsx,jsx",
   "verbose": true,
   "ignore": [
@@ -12,6 +12,7 @@
     "js/client-main.js",
     "js/client-main.js.map",
     "js/panel*.js",
-    "js/replay-embed.js"
+    "js/replay-embed.js",
+    "config/config.js"
   ]
 }

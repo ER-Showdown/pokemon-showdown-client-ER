@@ -8,6 +8,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "[DEV]: Singular Session (Chrome)",
+            "type": "chrome",
+            "url": "http://localhost:8080/testclient.html?~~localhost:8000",
+            "request": "launch",
+            "preLaunchTask": "Start TSC Watcher",
+            "postDebugTask": "Terminate All Tasks",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "/data/*.ts": "${workspaceFolder}/src/*.ts",
+                "/*.ts": "${workspaceFolder}/src/*.ts",
+            },
+        },
+        {
             "name": "[BROWSER] Player 1 Session",
             "request": "attach",
             "type": "chrome",
@@ -44,7 +57,6 @@
             "preLaunchTask": "Launch Browser Tabs",
             "postDebugTask": "Terminate All Tasks",
             "stopAll": true,
-            
         }
     ]
 } 
