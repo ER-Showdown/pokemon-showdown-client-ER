@@ -22,7 +22,7 @@
             "presentation": {
                 "hidden": false,
                 "group": "FRONTEND",
-                "order": 1
+                "order": 2
             }
         },
         {
@@ -34,7 +34,7 @@
             "presentation": {
                 "hidden": true,
                 "group": "FRONTEND",
-                "order": 1
+                "order": 2
             },
             "suppressMultipleSessionWarning": true,
             "preLaunchTask": "Launch Browser Tabs",
@@ -49,7 +49,7 @@
             "presentation": {
                 "hidden": true,
                 "group": "FRONTEND",
-                "order": 1
+                "order": 2
             },
             "suppressMultipleSessionWarning": true,
             "preLaunchTask": "Launch Browser Tabs",
@@ -67,7 +67,7 @@
             "presentation": {
                 "hidden": false,
                 "group": "FRONTEND",
-                "order": 1
+                "order": 2
             }
         }
     ]
