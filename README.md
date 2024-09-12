@@ -71,6 +71,8 @@ For instance: `http://localhost:8080/testclient.html?~~localhost:8000&username=p
 
 ### Test keys
 
+As the elite redux client now has a method of specifying a guest username via query parameter, this is no longer needed.
+
 For security reasons, browsers [don't let other websites control PS][5], so
 they can't screw with your account, but it does make it harder to log in on
 the test client.
