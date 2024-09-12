@@ -32,7 +32,7 @@
                 "background": {
                     "activeOnStart": true,
                     "beginsPattern": "starting showdown browser tabs for two player battle testing",
-                    "endsPattern": "using chrome binary at",
+                    "endsPattern": "launching chrome browser at",
                 }
             }
         },

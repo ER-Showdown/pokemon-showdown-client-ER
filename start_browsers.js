@@ -4,48 +4,18 @@
  * This eases the process of creating a live battle testing environment by opening two tabs, each with a diff username preconfigured.
  * Ideally, we may also add some dev configuration to automatically initiate a battle challenge between the two tabs.
  */
-var { spawn } = require("child_process");
-var fs = require("fs");
+
+var { execSync, spawn } = require("child_process");
 var path = require("path");
 var commandLineArgs = require("command-line-args");
 
 async function parseCommandLine() {
-	var x86Path = path.join(
-		"C:",
-		"Program Files (x86)",
-		"Google",
-		"Chrome",
-		"Application",
-		"chrome.exe"
-	);
-	var x64Path = path.join(
-		"C:",
-		"Program Files",
-		"Google",
-		"Chrome",
-		"Application",
-		"chrome.exe"
-	);
-	var defaultBrowser;
+	var params = [
+		{ name: "user1", type: String, defaultValue: "user123456" },
+		{ name: "user2", type: String, defaultValue: "user7654321" },
+	];
 
-	if (fs.existsSync(x86Path)) {
-		defaultBrowser = x86Path;
-	} else if (fs.existsSync(x64Path)) {
-		defaultBrowser = x64Path;
-
-		var params = [
-			{
-				name: "chromepath",
-				type: String | undefined,
-				defaultOption: true,
-				defaultValue: defaultBrowser,
-			},
-			{ name: "user1", type: String, defaultValue: "user123456" },
-			{ name: "user2", type: String, defaultValue: "user7654321" },
-		];
-
-		return commandLineArgs(params);
-	}
+	return commandLineArgs(params);
 }
 
 async function pipeOutput(child) {
@@ -71,26 +41,34 @@ async function main() {
 		"starting showdown browser tabs for two player battle testing"
 	);
 	var args = await parseCommandLine();
-
-	if (args.chromepath == null) {
-		throw new Error(
-			"Could not locate chrome executable on your system, are you sure it's installed? If so, try providing the full path to chrome.exe as the first argument to the command."
-		);
-	}
+	var chromePath = execSync("(Get-Command chrome).path", {
+		shell: "powershell",
+	})
+		.toString()
+		.replace("\n", "")
+		.replace("\r", "");
 
 	var user1Url = `http://localhost:8080/testclient.html?~~localhost:8000&username=${args.user1}`;
 	var user2Url = `http://localhost:8080/testclient.html?~~localhost:8000&username=${args.user2}`;
 
 	console.debug(
-		`using chrome binary at ${args.chromepath}, user1 url: ${user1Url}, user2 url: ${user2Url}`
+		`launching chrome browser at ${chromePath}, user1 url: ${user1Url}, user2 url: ${user2Url}`
 	);
-	await pipeOutput(
-		spawn(args.chromepath, [
-			user1Url,
-			user2Url,
-			"--remote-debugging-port=9200",
-		])
-	);
+
+	var child = spawn(chromePath, [
+		user1Url,
+		user2Url,
+		"--remote-debugging-port=9200",
+		"--incognito",
+	]);
+
+	process.on("SIGINT", function () {
+		child.kill();
+	});
+
+	await pipeOutput(child);
+
+	console.debug("browser finished, exiting");
 }
 
 main().then(() => process.exit(0));
