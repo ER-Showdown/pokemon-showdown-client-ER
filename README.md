@@ -53,8 +53,8 @@ Because elite redux uses it's own custom showdown server, it is not sufficient t
 Doing this in VSCode is very easy with workspace configurations.
 There are two launch options to choose from that will handle both the server and client:
 
--   `[DEBUG][TWOPLAYER] Elite Redux Showdown Battle Testing` This configuration will start the frontend and backend servers, and open two chrome tabs with separate usernames which is ideal for battle testing.
--   `[DEBUG][SINGLEPLAYER] Elite Redux Showdown` This configuration will start the frontend and backend servers, and open one chrome tab with a predefined username. Ideal for testing non-battle related features.
+-   `[TWOPLAYER] Elite Redux Showdown Battle Testing` This configuration will start the frontend and backend servers, and open two chrome tabs with separate usernames which is ideal for battle testing.
+-   `[SINGLEPLAYER] Elite Redux Showdown` This configuration will start the frontend and backend servers, and open one chrome tab with a predefined username. Ideal for testing non-battle related features.
 
 These configurations should also handle hot reloading when code changes, though you may need to refresh the browser.
 
