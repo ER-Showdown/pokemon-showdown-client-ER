@@ -21,7 +21,7 @@
         {
             "label": "Launch Browser Tabs",
             "type": "shell",
-            "command": "node ${workspaceFolder}/start_browsers.js --user1 ${config:showdown.player1Name} --user2 ${config:showdown.player2Name}",
+            "command": "node '${workspaceFolder}\\start_browsers.js' --user1 ${config:showdown.player1Name} --user2 ${config:showdown.player2Name}",
             "dependsOn": "Start TSC Watcher",
             "isBackground": true,
             "problemMatcher": {
