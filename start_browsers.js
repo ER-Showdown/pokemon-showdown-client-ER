@@ -59,7 +59,6 @@ async function main() {
 		user1Url,
 		user2Url,
 		"--remote-debugging-port=9200",
-		"--incognito",
 	]);
 
 	process.on("SIGINT", function () {

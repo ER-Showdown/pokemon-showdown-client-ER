@@ -38,9 +38,11 @@ var full = "";
 
 switch (process.argv[2] || "") {
 	case "full":
-		fs.rmSync("data/pokemon-showdown", { recursive: true, force: true });
+		console.log("building indexes");
 		execSync(`node ./build-tools/build-indexes`, options);
+		console.log("building learnsets");
 		execSync(`node ./build-tools/build-learnsets`, options);
+		console.log("building minidex");
 		execSync(`node ./build-tools/build-minidex`, options);
 		full = " full";
 		break;

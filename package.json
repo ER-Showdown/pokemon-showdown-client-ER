@@ -12,7 +12,7 @@
     "lint": "eslint --config=.eslintrc.js --cache --cache-file=eslint-cache/base js/ && eslint --config=build-tools/.eslintrc.js --cache --cache-file=eslint-cache/build build-tools/update build-tools/build-indexes && tslint --project .",
     "test": "npm run lint && tsc && node build && mocha test/*.js",
     "fix": "eslint --config=.eslintrc.js --fix js/ && eslint --config=build-tools/.eslintrc.js --fix build-tools/update build-tools/build-indexes",
-    "build": "node build && tsc",
+    "build": "node build full && tsc",
     "build-full": "node build full",
     "serve": "nodemon ./build_and_serve.js"
   },
