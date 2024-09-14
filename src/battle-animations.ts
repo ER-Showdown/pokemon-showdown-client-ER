@@ -2724,6 +2724,11 @@ export class PokemonSprite extends Sprite {
 		}
 	}
 
+		/**
+		 * This code handles updating the client battle status bar display.
+		 * Here, we display the indicators just below the pokemon name and health bar
+		 * for any active volatile status condition(s) (sleep, paralysis, freeze, etc).
+		 */
 	updateStatbar(pokemon: Pokemon, updatePrevhp?: boolean, updateHp?: boolean) {
 		if (!this.scene.animating) return;
 		if (!pokemon.isActive()) {
@@ -2757,6 +2762,10 @@ export class PokemonSprite extends Sprite {
 			else $prevhp.addClass('prevhp-yellow prevhp-red');
 		}
 		let status = '';
+		/**
+		 * These spans are what display the actual status indicators on screen.
+		 * See styleclient.css:2070 .status.frz for css styling that controls the display of these indicators.
+		 */
 		if (pokemon.status === 'brn') {
 			status += '<span class="brn">BRN</span> ';
 		} else if (pokemon.status === 'psn') {
