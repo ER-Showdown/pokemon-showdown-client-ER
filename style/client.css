@@ -2090,7 +2090,7 @@ a.ilink.yours {
 /**
 * This controls the display of the new bleed status indicator on the client interface status bar.
 */
-.status .bleed {
+.status .bleed, .status.bleed {
 	background: #920c04;
 	border-color: #260301;
 }
