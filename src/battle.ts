@@ -3218,6 +3218,8 @@ export class Battle {
 			output.status = '';
 		} else if (status === 'par' || status === 'brn' || status === 'slp' || status === 'frz' || status === 'tox') {
 			output.status = status;
+		} else if (status === 'bld') {
+			output.status = "bld";
 		} else if (status === 'psn' && output.status !== 'tox') {
 			output.status = status;
 		} else if (status === 'fnt') {
