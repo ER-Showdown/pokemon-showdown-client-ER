@@ -72,6 +72,12 @@ This will load pokemon showdown and configure it to connect to your local backen
 If you would like to have it preload a username for you so you don't have to choose one everytime, you can add a query parameter to your url.
 For instance: `http://localhost:8080/testclient.html?~~localhost:8000&username=player11112222`.
 
+### Preloaded Teams
+
+The testing client has support for preloaded teambuilder teams from the config file `config/teams.js`.
+Look at the example file `config/teams-example.js` for details on how to setup this file properly.
+Once setup, the client will automatically load the team you created when loading the page.
+
 ### Test keys
 
 As the elite redux client now has a method of specifying a guest username via query parameter, this is no longer needed.

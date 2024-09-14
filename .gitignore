@@ -1,6 +1,7 @@
 /audio/
 /config/config.js
 /config/testclient-key.js
+/config/teams.js
 /index.php
 /index.html
 /preactalpha.html
