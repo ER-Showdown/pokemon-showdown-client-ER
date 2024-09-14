@@ -2088,7 +2088,8 @@ a.ilink.yours {
 	background: #009AA4;
 }
 .status .bleed {
-	background: #FF5733;
+	background: #920c04;
+	border-color: #260301;
 }
 
 .movemenu button {
