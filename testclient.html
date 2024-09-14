@@ -100,6 +100,9 @@
 			document.getElementById('loading-message').innerHTML += ' DONE<br />Loading client...';
 		</script>
 
+		<script src="config/teams.js"></script>
+		<script src="config/er-config.js"></script>
+
 		<script src="js/client.js"></script>
 		<script src="js/client-topbar.js"></script>
 		<script src="js/client-mainmenu.js"></script>
@@ -125,7 +128,7 @@
 
 		<script src="data/aliases.js" async="async" onerror="loadRemoteData(this.src)"></script>
 		<!-- Order matters here as our dev username bootstrapper requires jQuery and the app.user model to be defined. -->
-		<script src="config/er-config.js"></script>
+		
 
 		<script>
 			window.onload = () => {
