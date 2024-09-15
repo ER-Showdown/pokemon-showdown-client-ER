@@ -3059,6 +3059,7 @@ export class Battle {
 			let fromeffect = Dex.getEffect(kwArgs.from);
 			this.activateAbility(poke, fromeffect);
 			let minTimeLeft = 5;
+
 			let maxTimeLeft = 0;
 			if (effect.id.endsWith('terrain')) {
 				for (let i = this.pseudoWeather.length - 1; i >= 0; i--) {
@@ -3071,6 +3072,10 @@ export class Battle {
 				if (this.gen > 6) maxTimeLeft = 8;
 			}
 			if (kwArgs.persistent) minTimeLeft += 2;
+			/// Update the trick room duration display when the ability twisted dimension activates as it will only last 3 turns in this case.
+			if (kwArgs.twistdimension) {
+				minTimeLeft -= 2;
+			}
 			this.addPseudoWeather(effect.name, minTimeLeft, maxTimeLeft);
 
 			switch (effect.id) {
