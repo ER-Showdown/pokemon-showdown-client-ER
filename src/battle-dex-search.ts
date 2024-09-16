@@ -1421,7 +1421,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		case 'refresh':
 			return !moves.includes('aromatherapy') && !moves.includes('healbell');
 		case 'risingvoltage':
-			return abilityid === 'electricsurge' || abilityid === 'hadronengine';
+			return abilityid === 'electrosurge' || abilityid === 'hadronengine';
 		case 'rocktomb':
 			return abilityid === 'technician';
 		case 'selfdestruct':
