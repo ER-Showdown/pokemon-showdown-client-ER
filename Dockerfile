@@ -4,22 +4,20 @@ WORKDIR /er-showdown/
 
 USER root
 
-RUN apk add git
+COPY package*.json ./
 
-USER node
+RUN apk add --no-cache git \
+    && npm install
 
-COPY --chown=node:node package*.json ./
+COPY ./ ./
 
-RUN npm install
-
-COPY --chown=node:node ./ ./
-
-RUN mkdir ./data/
-
-RUN npm run build
-
-RUN rm -rf ./data/pokemon-showdown/
-RUN find ./ -type f -name "*.map" -delete
+RUN mkdir ./data/ \
+    && npm run build \
+    && rm -rf ./data/pokemon-showdown/ \
+    && rm -rf node_modules/ \
+    && find ./ -type f -name "*.map" -delete \
+    && apk del git \
+    && apk cache clean
 
 FROM cgr.dev/chainguard/node:latest
 
@@ -27,11 +25,10 @@ ENV PORT=8080
 
 WORKDIR /er-showdown/
 
-COPY --from=builder /er-showdown/ ./
+COPY --from=builder --chown=node:node /er-showdown/ ./
 
-RUN rm -rf node_modules/
-
-RUN npm install --omit=dev
+RUN npm install --omit=dev \
+    && npm cache clean --force
 
 EXPOSE $PORT
 
