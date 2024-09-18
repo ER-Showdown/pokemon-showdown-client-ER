@@ -1,0 +1,15 @@
+.github
+.git
+.vsvode
+data
+desktop
+graphics-src
+node_modules
+swf
+test
+website
+*.php
+*.md
+showdown.crx
+showdown.webapp
+build_and_serve.js
