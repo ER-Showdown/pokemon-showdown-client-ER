@@ -13,3 +13,4 @@ website
 showdown.crx
 showdown.webapp
 build_and_serve.js
+Dockerfile
