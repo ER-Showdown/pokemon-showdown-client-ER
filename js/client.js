@@ -1058,16 +1058,15 @@ function toId() {
 						console.log(url);
 						return new WebSocket(url);
 					}
-					return new SockJS(
+					const connectionUrl =
 						protocol +
-							"://" +
-							Config.server.host +
-							":" +
-							Config.server.port +
-							Config.sockjsprefix,
-						[],
-						{ timeout: 5 * 60 * 1000 }
-					);
+						"://" +
+						Config.server.host +
+						":" +
+						Config.server.port +
+						Config.sockjsprefix;
+					console.debug(`Connection to server at ${connectionUrl}`);
+					return new SockJS(connectionUrl, [], { timeout: 5 * 60 * 1000 });
 				} catch (err) {
 					// The most common case this happens is if an HTTPS connection fails,
 					// and we fall back to HTTP, which throws a SecurityError if the URL

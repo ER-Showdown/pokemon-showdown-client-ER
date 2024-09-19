@@ -2,10 +2,10 @@ var Config = Config || {};
 
 /* version */ Config.version = "0";
 
-Config.bannedHosts = ['cool.jit.su', 'pokeball-nixonserver.rhcloud.com'];
+Config.bannedHosts = ["cool.jit.su", "pokeball-nixonserver.rhcloud.com"];
 
 Config.whitelist = [
-	'wikipedia.org',
+	"wikipedia.org",
 
 	// The full list is maintained outside of this repository so changes to it
 	// don't clutter the commit log. Feel free to copy our list for your own
@@ -18,17 +18,16 @@ Config.whitelist = [
 // `defaultserver` specifies the server to use when the domain name in the
 // address bar is `Config.routes.client`.
 Config.defaultserver = {
-	id: 'showdown',
-	host: 'sim3.psim.us',
+	id: "showdown",
+	host: "er-showdown-backend-926545055857.us-central1.run.app",
 	port: 443,
 	httpport: 8000,
 	altport: 80,
-	registered: true
+	registered: true,
 };
 
-Config.roomsFirstOpenScript = function () {
-};
+Config.roomsFirstOpenScript = function () {};
 
 Config.customcolors = {
-	'zarel': 'aeo'
+	zarel: "aeo",
 };
