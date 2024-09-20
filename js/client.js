@@ -394,6 +394,8 @@ function toId() {
 			if (Config.testclient) {
 				ret = "https://" + Config.routes.client + ret;
 			}
+
+			console.debug("this.getActionPHP", ret);
 			return (this.getActionPHP = function () {
 				return ret;
 			})();
@@ -527,6 +529,7 @@ function toId() {
 				 */
 				this.challstr = challstr;
 				var self = this;
+				console.debug("got challstr from server", challstr);
 				$.post(
 					this.getActionPHP(),
 					{
@@ -634,6 +637,8 @@ function toId() {
 				}
 				Storage.whenPrefsLoaded(function () {
 					if (!Config.server.registered) {
+						// Where does this go?
+						// Room.send
 						app.send("/autojoin");
 						Backbone.history.start({ pushState: !Config.testclient });
 						return;
@@ -650,7 +655,12 @@ function toId() {
 					var autojoinIds = [];
 					if (typeof autojoin === "string") {
 						// Use the existing autojoin string for showdown, and an empty string for other servers.
-						if (Config.server.id !== "showdown") autojoin = "";
+						if (Config.server.id !== "showdown") {
+							autojoin = "";
+							console.debug(
+								"using empty string for non showdown auto join string"
+							);
+						}
 					} else {
 						// If there is not autojoin data for this server, use a empty string.
 						autojoin = autojoin[Config.server.id] || "";
@@ -667,6 +677,7 @@ function toId() {
 							autojoinIds.push(roomid);
 						}
 					}
+					console.debug("sending /autojoin to ", autoJoinIds);
 					app.send("/autojoin " + autojoinIds.join(","));
 					var settings = Dex.prefs("serversettings") || {};
 					if (Object.keys(settings).length)
@@ -680,6 +691,7 @@ function toId() {
 			var self = this;
 
 			Storage.whenPrefsLoaded(function () {
+				console.debug("Storage.whenPrefsLoaded");
 				Storage.prefs("bg", null);
 
 				var muted = Dex.prefs("mute");
