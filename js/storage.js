@@ -815,7 +815,7 @@ Storage.unpackAllTeams = function (buffer) {
 		return JSON.parse(buffer).map(function (oldTeam) {
 			var format = oldTeam.format || "gen9";
 			var capacity = 6;
-			if (format && format.slice(0, 3) !== "gen") format = "gen6" + format;
+			if (format && format.slice(0, 3) !== "gen") format = format;
 			if (format && format.endsWith("-box")) {
 				format = format.slice(0, -4);
 				capacity = 24;
@@ -852,7 +852,7 @@ Storage.unpackLine = function (line) {
 		bracketIndex > 0
 			? line.slice(0, isBox ? bracketIndex - 4 : bracketIndex)
 			: "gen9";
-	if (format && format.slice(0, 3) !== "gen") format = "gen6" + format;
+	if (format && format.slice(0, 3) !== "gen") format = format;
 	return {
 		name: line.slice(slashIndex + 1, pipeIndex),
 		format: format,
@@ -1379,8 +1379,7 @@ Storage.importTeam = function (buffer, teams) {
 			var bracketIndex = line.indexOf("]");
 			if (bracketIndex >= 0) {
 				format = line.substr(1, bracketIndex - 1);
-				if (format && format.slice(0, 3) !== "gen")
-					format = "gen6" + format;
+				if (format && format.slice(0, 3) !== "gen") format = format;
 				if (format && format.endsWith("-box")) {
 					format = format.slice(0, -4);
 					capacity = 24;
@@ -1887,7 +1886,7 @@ Storage.nwLoadTeamFile = function (filename, localApp) {
 	var bracketIndex = line.indexOf("]");
 	if (bracketIndex >= 0) {
 		format = line.slice(1, bracketIndex);
-		if (format && !format.startsWith("gen")) format = "gen6" + format;
+		if (format && !format.startsWith("gen")) format = format;
 		if (format && /^gen6gen[0-9]/.test(format)) format = format.slice(4);
 		if (format && format.endsWith("-box")) {
 			format = format.slice(0, -4);
