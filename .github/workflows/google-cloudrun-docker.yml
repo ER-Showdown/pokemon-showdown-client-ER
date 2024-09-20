@@ -39,6 +39,8 @@ on:
   workflow_dispatch:
     branches:
       - '"master"'
+  repository_dispatch:
+    types: [trigger-workflow]
 
 env:
   PROJECT_ID: "stately-planet-436000-q5"
