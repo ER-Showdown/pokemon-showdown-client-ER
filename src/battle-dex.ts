@@ -820,7 +820,6 @@ const Dex = new (class implements ModdedDex {
 		pokemon: string | Pokemon | ServerPokemon | PokemonSet | null,
 		facingLeft?: boolean
 	) {
-		console.log("getpokemonicon called");
 		if (pokemon === "pokeball") {
 			return `background:transparent url(${Dex.resourcePrefix}sprites/pokemonicons-pokeball-sheet.png) no-repeat scroll -0px 4px`;
 		} else if (pokemon === "pokeball-statused") {
@@ -832,7 +831,6 @@ const Dex = new (class implements ModdedDex {
 		}
 
 		let id = toID(pokemon);
-		console.log("id: " + id);
 		if (!pokemon || typeof pokemon === "string") pokemon = null;
 		// @ts-ignore
 		if (pokemon?.speciesForme) id = toID(pokemon.speciesForme);
@@ -858,7 +856,6 @@ const Dex = new (class implements ModdedDex {
 		pokemon: any,
 		gen: number = 0
 	): TeambuilderSpriteData {
-		console.log("getTeambuilderSpriteData called");
 		let id = toID(pokemon.species);
 		let spriteid = pokemon.spriteid;
 		let species = Dex.species.get(pokemon.species);
@@ -914,7 +911,6 @@ const Dex = new (class implements ModdedDex {
 				spriteData.x = -2;
 				spriteData.y = 0;
 			}
-			console.log(spriteData.y);
 			return spriteData;
 		}
 		spriteData.spriteDir = "sprites/gen5";
@@ -927,12 +923,10 @@ const Dex = new (class implements ModdedDex {
 			spriteData.spriteDir = "sprites/gen4";
 		spriteData.x = 10;
 		spriteData.y = 20;
-		console.log(spriteData.y);
 		return spriteData;
 	}
 
 	getTeambuilderSprite(pokemon: any, gen: number = 0) {
-		console.log("getTeambuilderSprite called");
 		if (!pokemon) return "";
 		const data = this.getTeambuilderSpriteData(pokemon, gen);
 		const shiny = data.shiny ? "-shiny" : "";
