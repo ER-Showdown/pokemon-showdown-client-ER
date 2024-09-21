@@ -223,14 +223,12 @@ const Dex = new (class implements ModdedDex {
 	moddedDexes: { [mod: string]: ModdedDex } = {};
 
 	mod(modid: ID): ModdedDex {
-		console.debug("loading mod", modid);
 		if (modid === "gen9") return this;
 		if (!window.BattleTeambuilderTable) return this;
 		if (modid in this.moddedDexes) {
 			return this.moddedDexes[modid];
 		}
 		this.moddedDexes[modid] = new ModdedDex(modid);
-		console.debug("loaded mod", modid, this.moddedDexes[modid]);
 		return this.moddedDexes[modid];
 	}
 	forGen(gen: number) {
@@ -1139,7 +1137,7 @@ class ModdedDex {
 				}
 			}
 			if (this.modid !== `gen${this.gen}`) {
-				console.log("battle-dex lookup teambuilder table", this.modid);
+				console.log(this.modid);
 				const table = window.BattleTeambuilderTable[this.modid];
 				if (id in table.overrideSpeciesData) {
 					Object.assign(data, table.overrideSpeciesData[id]);
