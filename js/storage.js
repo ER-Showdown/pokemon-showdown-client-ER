@@ -815,7 +815,13 @@ Storage.unpackAllTeams = function (buffer) {
 		return JSON.parse(buffer).map(function (oldTeam) {
 			var format = oldTeam.format || "gen9";
 			var capacity = 6;
-			if (format && format.slice(0, 3) !== "gen") format = "gen6" + format;
+			if (format && format.slice(0, 3) !== "gen") {
+				if (format.includes("eliteredux")) {
+					format = "gen8" + format;
+				} else {
+					format = "gen6" + format;
+				}
+			}
 			if (format && format.endsWith("-box")) {
 				format = format.slice(0, -4);
 				capacity = 24;
@@ -1374,7 +1380,7 @@ Storage.importTeam = function (buffer, teams) {
 		} else if (line.substr(0, 3) === "===" && teams) {
 			team = [];
 			line = $.trim(line.substr(3, line.length - 6));
-			var format = "gen9";
+			var format = "gen8elitereduxou";
 			var capacity = 6;
 			var bracketIndex = line.indexOf("]");
 			if (bracketIndex >= 0) {
@@ -1882,7 +1888,7 @@ Storage.nwLoadTeamFile = function (filename, localApp) {
 		return;
 	}
 
-	var format = "gen9";
+	var format = "gen8elitereduxou";
 	var capacity = 6;
 	var bracketIndex = line.indexOf("]");
 	if (bracketIndex >= 0) {

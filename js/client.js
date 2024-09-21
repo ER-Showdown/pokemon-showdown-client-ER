@@ -1686,8 +1686,9 @@ function toId() {
 					var teambuilderFormatName = "";
 					if (isTeambuilderFormat) {
 						teambuilderFormatName = name;
-						if (id.slice(0, 3) !== "gen") {
-							teambuilderFormatName = name;
+						if (id.slice(0, 3) !== "gen" && !id.includes("eliteredux")) {
+							console.debug("appending [gen6] to ", name);
+							teambuilderFormatName = "[Gen 6] " + name;
 						}
 						var parenPos = teambuilderFormatName.indexOf("(");
 						if (parenPos > 0 && name.slice(-1) === ")") {
