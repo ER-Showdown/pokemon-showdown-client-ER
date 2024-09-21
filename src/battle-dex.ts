@@ -29,11 +29,14 @@ if (typeof window === "undefined") {
 	window.exports = window;
 }
 
-// @ts-ignore
 window.nodewebkit = !!(
+	// prettier-ignore
+	// @ts-ignore
 	typeof process !== "undefined" &&
-	process.versions &&
-	process.versions["node-webkit"]
+		// @ts-ignore
+		process.versions &&
+		// @ts-ignore
+		process.versions["node-webkit"]
 );
 
 function toID(text: any) {
