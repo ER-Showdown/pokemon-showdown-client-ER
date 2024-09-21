@@ -330,7 +330,7 @@ if (!Storage.bg.id) {
 // localStorage is banned, and since prefs are cached in other
 // places in certain cases.
 
-Storage.origin = "https://" + Config.routes.client;
+Storage.origin = "http://" + Config.routes.client;
 
 Storage.prefs = function (prop, value, save) {
 	if (value === undefined) {
@@ -475,7 +475,7 @@ Storage.initPrefs = function () {
 
 	$(window).on("message", Storage.onMessage);
 
-	if (document.location.hostname !== Config.routes.client) {
+	if (document.location.host !== Config.routes.client) {
 		$(
 			'<iframe src="https://' +
 				Config.routes.client +
@@ -490,9 +490,7 @@ Storage.initPrefs = function () {
 	} else {
 		Config.server = Config.server || Config.defaultserver;
 		$(
-			'<iframe src="https://' +
-				Config.routes.client +
-				'/crossprotocol.html?v1.2" style="display: none;"></iframe>'
+			'<iframe src=/crossprotocol.html?v1.2" style="display: none;"></iframe>'
 		).appendTo("body");
 		setTimeout(function () {
 			// HTTPS may be blocked
