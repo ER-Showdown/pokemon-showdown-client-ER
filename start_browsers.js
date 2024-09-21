@@ -7,6 +7,7 @@
 
 var { execSync, spawn } = require("child_process");
 var path = require("path");
+var fs = require("fs");
 var commandLineArgs = require("command-line-args");
 
 async function parseCommandLine() {
@@ -40,13 +41,57 @@ async function main() {
 	console.debug(
 		"starting showdown browser tabs for two player battle testing"
 	);
+
 	var args = await parseCommandLine();
-	var chromePath = execSync("(Get-Command chrome).path", {
-		shell: "powershell",
-	})
-		.toString()
-		.replace("\n", "")
-		.replace("\r", "");
+	console.debug("got cmdline args", args);
+	var x86Path = path.join(
+		"C:",
+		"Program Files (x86)",
+		"Google",
+		"Chrome",
+		"Application",
+		"chrome.exe"
+	);
+	var x64Path = path.join(
+		"C:",
+		"Program Files",
+		"Google",
+		"Chrome",
+		"Application",
+		"chrome.exe"
+	);
+	var chromePath;
+	if (fs.existsSync(x86Path)) {
+		console.debug("using x86 path");
+		chromePath = x86Path;
+	} else if (fs.existsSync(x64Path)) {
+		console.debug("using x64 path");
+		chromePath = x64Path;
+	} else {
+		try {
+			chromePath = execSync("(Get-Command chrome).path", {
+				shell: "powershell",
+			})
+				.toString()
+				.replace("\n", "")
+				.replace("\r", "");
+		} catch (error) {
+			console.debug(
+				"============================================================================"
+			);
+			console.debug("FATAL: Cannot locate chrome browser on your machine!");
+			console.debug("Checked the following locations for chrome.exe");
+			console.debug(x86Path, x64Path);
+			console.debug(
+				"Also tried to locate chrome.exe using powershell command (Get-Command chrome).path"
+			);
+			console.debug("Which failed with the error", error);
+			console.debug(
+				"============================================================================"
+			);
+			throw new Error();
+		}
+	}
 
 	var user1Url = `http://localhost:8080/testclient.html?~~localhost:8000&username=${args.user1}`;
 	var user2Url = `http://localhost:8080/testclient.html?~~localhost:8000&username=${args.user2}`;
@@ -70,4 +115,7 @@ async function main() {
 	console.debug("browser finished, exiting");
 }
 
-main().then(() => process.exit(0));
+main().then(
+	() => process.exit(0),
+	(error) => process.exit(1)
+);
