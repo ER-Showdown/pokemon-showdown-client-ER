@@ -7,8 +7,8 @@
  * 4. Click "http://localhost:8080"
  * 5. Copy the Value for the key "showdown_teams" and paste as the value for the variable below.
  * An example teambuilder values might look like:
- * elitereduxou]Untitled 1|Amoonguss||aguavberry|infiltrator|bodyslam,clearsmog,curse,doubleedge|Brave|248,252,,8,,|||||
+ * gen8elitereduxou]Untitled 1|Amoonguss||aguavberry|infiltrator|bodyslam,clearsmog,curse,doubleedge|Brave|248,252,,8,,|||||
  * For this value, your config.js file should look like:
- * Config.preloadedTeams = "elitereduxou]Untitled 1|Amoonguss||aguavberry|infiltrator|bodyslam,clearsmog,curse,doubleedge|Brave|248,252,,8,,|||||";
+ * Config.preloadedTeams = "gen8elitereduxou]Untitled 1|Amoonguss||aguavberry|infiltrator|bodyslam,clearsmog,curse,doubleedge|Brave|248,252,,8,,|||||";
  */
 Config.preloadedTeams = "";

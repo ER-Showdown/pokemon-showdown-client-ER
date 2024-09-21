@@ -29,14 +29,11 @@ if (typeof window === "undefined") {
 	window.exports = window;
 }
 
+// @ts-ignore
 window.nodewebkit = !!(
-	// prettier-ignore
-	// @ts-ignore
 	typeof process !== "undefined" &&
-		// @ts-ignore
-		process.versions &&
-		// @ts-ignore
-		process.versions["node-webkit"]
+	process.versions &&
+	process.versions["node-webkit"]
 );
 
 function toID(text: any) {
@@ -860,6 +857,7 @@ const Dex = new (class implements ModdedDex {
 		pokemon: any,
 		gen: number = 0
 	): TeambuilderSpriteData {
+		console.log("getTeambuilderSpriteData called");
 		let id = toID(pokemon.species);
 		let spriteid = pokemon.spriteid;
 		let species = Dex.species.get(pokemon.species);
@@ -933,6 +931,7 @@ const Dex = new (class implements ModdedDex {
 	}
 
 	getTeambuilderSprite(pokemon: any, gen: number = 0) {
+		console.log("getTeambuilderSprite called");
 		if (!pokemon) return "";
 		const data = this.getTeambuilderSpriteData(pokemon, gen);
 		const shiny = data.shiny ? "-shiny" : "";
@@ -1025,11 +1024,9 @@ class ModdedDex {
 	constructor(modid: ID) {
 		this.modid = modid;
 		const gen = parseInt(modid.substr(3, 1), 10);
-		if (!modid.startsWith("gen") || !gen) {
-			this.gen = 8;
-		} else {
-			this.gen = gen;
-		}
+		if (!modid.startsWith("gen") || !gen)
+			throw new Error("Unsupported modid");
+		this.gen = gen;
 	}
 	moves = {
 		get: (name: string): Move => {
