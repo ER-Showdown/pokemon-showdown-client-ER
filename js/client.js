@@ -1698,6 +1698,7 @@ function toId() {
 						}
 						if (teambuilderFormatName !== name) {
 							teambuilderFormat = toID(teambuilderFormatName);
+							teambuilderFormatName = name;
 							if (teambuilderFormat.startsWith("gen8nd"))
 								teambuilderFormat =
 									"gen8nationaldex" + teambuilderFormat.slice(6);
