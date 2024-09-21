@@ -1241,7 +1241,7 @@
 					bufs[curBuf] += '<li><h3>' + BattleLog.escapeHTML(curSection) + '</li>';
 				}
 				var formatName = BattleLog.escapeFormat(format.id);
-				if (formatName.charAt(0) !== '[') formatName = formatName;
+				if (formatName.charAt(0) !== '[') formatName = '[Gen 6] ' + formatName;
 				formatName = formatName.replace('[Gen 8 ', '[');
 				formatName = formatName.replace('[Gen 9] ', '');
 				formatName = formatName.replace('[Gen 7 ', '[');
