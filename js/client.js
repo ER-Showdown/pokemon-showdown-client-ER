@@ -550,16 +550,16 @@ function toId() {
 							});
 						}
 						self.finishRename(data.username, data.assertion);
+						/// We can't request a user rename until our challstr comes in from the login server.
+						if (Config.devUsernameOverride) {
+							console.debug(
+								`renaming user to dev override ${Config.devUsernameOverride}`
+							);
+							app.user.rename(Config.devUsernameOverride);
+						}
 					}),
 					"text"
 				);
-				/// We can't request a user rename until our challstr comes in from the login server.
-				if (Config.devUsernameOverride) {
-					console.debug(
-						`renaming user to dev override ${Config.devUsernameOverride}`
-					);
-					app.user.rename(Config.devUsernameOverride);
-				}
 			}
 		},
 		/**
