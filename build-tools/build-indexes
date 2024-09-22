@@ -15,17 +15,29 @@ if (backendRepository.endsWith("/")) {
 const rootDir = path.resolve(__dirname, "..");
 process.chdir(rootDir);
 
+const noBackendBuild = process.argv.includes("--no-backend-build");
+
 if (!fs.existsSync(backendRepository)) {
+	// Since we just cloned the backend repository, we have to build it.
+	noBackendBuild = false;
 	child_process.execSync(
 		`git clone https://github.com/ER-Showdown/pokemon-showdown-ER ${backendRepository}`
 	);
 }
 
 const backendDistDir = ["..", backendRepository, "dist"].join("/");
-process.stdout.write("Syncing data from backend repository... ");
-// child_process.execSync("git reset --hard", { cwd: backendRepository });
-// child_process.execSync("git pull", { cwd: backendRepository });
-child_process.execSync("npm run build", { cwd: backendRepository });
+// We don't need to do this anymore since we monitor the backend dir
+console.debug("process.argv", process.argv);
+
+if (!noBackendBuild) {
+	process.stdout.write("Building backend repository...\n");
+	child_process.execSync("npm run build", { cwd: backendRepository });
+} else {
+	process.stdout.write(
+		"Not building backend repository as it already exists and --no-backend-build was specified.\n"
+	);
+}
+
 console.log("DONE");
 
 const dexLocation = [backendDistDir, "sim", "dex"].join("/");

@@ -19,7 +19,7 @@ async function pipeOutput(child) {
 }
 
 async function main() {
-	await pipeOutput(spawn("npm", ["run", "build"], { shell: true }));
+	await pipeOutput(spawn("npm", ["run", "build-dev"], { shell: true }));
 	await pipeOutput(spawn("npx", ["http-server", "-c-1"], { shell: true }));
 }
 
