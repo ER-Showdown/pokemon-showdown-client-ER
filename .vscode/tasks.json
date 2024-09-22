@@ -6,6 +6,7 @@
             "script": "serve",
             "type": "npm",
             "isBackground": true,
+            "dependsOn": "sleep",
             "problemMatcher": {
                 "owner": "custom",
                 "pattern": {
@@ -42,6 +43,16 @@
             "type": "shell",
             "problemMatcher": []
         },
+        {
+            "label": "sleep",
+            "type": "shell",
+            "command": "sleep 6",
+            "group": "none",
+            "presentation": {
+              "reveal": "silent",
+              "panel": "new"
+            }
+          }
     ],
     "inputs": [
         {
