@@ -1,6 +1,13 @@
 {
-  "watch": ["src/", "js/", "config/"],
-  "ext": "js,ts,css,html,json,tsx,jsx",
+  "watch": [
+    "src/",
+    "js/",
+    "config/",
+    "index.template.html",
+    "crossprotocol.template.html",
+    "nodemon.json"
+  ],
+  "ext": "js,ts,css,html,json,tsx,jsx,template.html",
   "verbose": true,
   "ignore": [
     ".git",

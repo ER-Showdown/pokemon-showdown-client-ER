@@ -390,10 +390,12 @@ function toId() {
 		 * domain in order to have access to the correct cookies.
 		 */
 		getActionPHP: function () {
-			var ret = "/~~" + Config.server.id + "/action.php";
+			console.debug("getActionPHP called");
+			var ret = "http://localhost:8081/action.php";
 			if (Config.testclient) {
 				ret = "https://" + Config.routes.client + ret;
 			}
+			console.debug("getActionPHP ret", ret);
 			return (this.getActionPHP = function () {
 				return ret;
 			})();
@@ -633,6 +635,7 @@ function toId() {
 					this.addRoom("lobby", null, true);
 				}
 				Storage.whenPrefsLoaded(function () {
+					console.debug("prefsLoaded sending /autjoin");
 					if (!Config.server.registered) {
 						app.send("/autojoin");
 						Backbone.history.start({ pushState: !Config.testclient });
