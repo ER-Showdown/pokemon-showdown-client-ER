@@ -720,7 +720,7 @@ const BattlePokemonIconIndexesLeft: {[id: string]: number} = {
 	necrozmaultra: 1344 + 103,
 	stakataka: 1344 + 104,
 	blacephalon: 1344 + 105,
-	
+
 };
 
 const BattleAvatarNumbers: {[k: string]: string} = {
@@ -1198,7 +1198,7 @@ interface MoveFlags {
 	//Power multiplied by 1.3 with Striker
 	kick?: 1 | 0;
 	//Ignores immunity and Tinted Lens effect with Bone Zone
-	bone?: 1 | 0; 
+	bone?: 1 | 0;
 	//Boosted by Mighty Horn and increases attack with Hardened Sheath
 	horn?: 1 | 0
 
@@ -1537,7 +1537,7 @@ class Species implements Effect {
 		this.changesFrom = data.changesFrom || undefined;
 		if (!this.gen) {
 			if (this.num >= 906 || this.formeid.startsWith('-paldea')) {
-				this.gen = 9;
+				this.gen = 8;
 			} else if (this.num >= 810 || this.formeid.startsWith('-galar') || this.formeid.startsWith('-hisui')) {
 				this.gen = 8;
 			} else if (this.num >= 722 || this.formeid === '-alola' || this.formeid === '-starter') {
