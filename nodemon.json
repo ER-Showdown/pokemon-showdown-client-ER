@@ -1,10 +1,5 @@
 {
-  "watch": [
-    "src/",
-    "js/",
-    "config/",
-    "../pokemon-showdown-ER/dist/data/**/*.js"
-  ],
+  "watch": ["src/", "js/", "config/"],
   "ext": "js,ts,css,html,json,tsx,jsx",
   "verbose": true,
   "ignore": [

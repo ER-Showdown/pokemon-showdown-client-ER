@@ -14,7 +14,6 @@
     "fix": "eslint --config=.eslintrc.js --fix js/ && eslint --config=build-tools/.eslintrc.js --fix build-tools/update build-tools/build-indexes",
     "build": "node build full && tsc",
     "build-full": "node build full",
-    "build-dev": "node build full --no-backend-build",
     "serve": "nodemon ./build_and_serve.js"
   },
   "dependencies": {

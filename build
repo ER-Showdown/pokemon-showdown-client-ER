@@ -36,15 +36,10 @@ try {
 var options = { cwd: __dirname, stdio: "inherit" };
 var full = "";
 
-/// Don't build the backend repository if this argument is specified.
-const noBackendBuild = process.argv.includes("--no-backend-build")
-	? " --no-backend-build"
-	: "";
-
 switch (process.argv[2] || "") {
 	case "full":
 		console.log("building indexes");
-		execSync(`node ./build-tools/build-indexes${noBackendBuild}`, options);
+		execSync(`node ./build-tools/build-indexes`, options);
 		console.log("building learnsets");
 		execSync(`node ./build-tools/build-learnsets`, options);
 		console.log("building minidex");
