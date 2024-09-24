@@ -9,3 +9,4 @@ const usernameMatch = /username=([a-z0-9*]{1,19})/.exec(location.search);
 if (usernameMatch) {
 	Config.devUsernameOverride = usernameMatch[1];
 }
+

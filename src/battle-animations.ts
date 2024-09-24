@@ -686,7 +686,10 @@ export class BattleScene implements BattleSceneStub {
 		pokemonhtml = '<div class="teamicons">' + pokemonhtml + '</div>';
 		const ratinghtml = side.rating ? ` title="Rating: ${BattleLog.escapeHTML(side.rating)}"` : ``;
 		const faded = side.name ? `` : ` style="opacity: 0.4"`;
-		return `<div class="trainer trainer-${posStr}"${faded}><strong>${BattleLog.escapeHTML(side.name)}</strong><div class="trainersprite"${ratinghtml} style="background-image:url(${Dex.resolveAvatar(side.avatar)})"></div>${pokemonhtml}</div>`;
+		const p = Dex.resourcePrefix + 'sprites/trainers/';
+		let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<'];
+
+		return `<div class="trainer trainer-${posStr}"${faded}><strong>${BattleLog.escapeHTML(side.name)}</strong><div class="trainersprite"${ratinghtml} style="background-image:url(${custom_trainers.includes(side.id) ? p + (side.id === "siobhanthegal>_<" ? "siobhanthegal" : side.id) + ".png" : Dex.resolveAvatar(side.avatar) }); background-size: contain"></div>${pokemonhtml}</div>`;
 	}
 	updateSidebar(side: Side) {
 		if (this.battle.gameType === 'freeforall') {

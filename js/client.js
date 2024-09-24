@@ -3182,14 +3182,18 @@ function toId() {
 					}
 				}
 				var ownUserid = app.user.get("userid");
-
+				console.log("OWNUSERID = " + ownUserid);
 				var buf = '<div class="userdetails">';
+				const p = Dex.resourcePrefix + 'sprites/trainers/';
+				let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<'];
+
+
 				if (avatar)
 					buf +=
 						'<img class="trainersprite' +
 						(userid === ownUserid ? " yours" : "") +
 						'" src="' +
-						Dex.resolveAvatar(avatar) +
+						(custom_trainers.includes(userid) ? p + (userid === "siobhanthegal>_<" ? "siobhanthegal" : userid) + ".png" : Dex.resolveAvatar(avatar)) +
 						'" />';
 				buf +=
 					'<strong><a href="//' +

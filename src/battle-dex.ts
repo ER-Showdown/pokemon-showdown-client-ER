@@ -1,3 +1,4 @@
+import { getName } from '../data/pokemon-showdown/data/mods/ssb/conditions';
 /**
  * Pokemon Showdown Dex
  *
@@ -209,6 +210,7 @@ const Dex = new class implements ModdedDex {
 	}
 
 	resolveAvatar(avatar: string): string {
+
 		if (window.BattleAvatarNumbers && avatar in BattleAvatarNumbers) {
 			avatar = BattleAvatarNumbers[avatar];
 		}
