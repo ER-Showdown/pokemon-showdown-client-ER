@@ -633,7 +633,7 @@ const Dex = new class implements ModdedDex {
 		let allowAnim = false;
 		if (allowAnim && spriteData.gen >= 6) spriteData.pixelated = false;
 		if (allowAnim && animationData[facing] && spriteData.gen >= 5) {
-			if (facing.slice(-1) === 'f') name += '-f';
+			//if (facing.slice(-1) === 'f') name += '-f';
 			dir = baseDir + 'ani' + dir;
 
 			spriteData.w = animationData[facing].w;
@@ -646,9 +646,9 @@ const Dex = new class implements ModdedDex {
 
 			// Gender differences don't exist prior to Gen 4,
 			// so there are no sprites for it
-			if (spriteData.gen >= 4 && miscData['frontf'] && options.gender === 'F') {
-				name += '-f';
-			}
+			// if (spriteData.gen >= 4 && miscData['frontf'] && options.gender === 'F') {
+			// 	name += '-f';
+			// }
 
 			spriteData.url += dir + '/' + name + '.png';
 		}
