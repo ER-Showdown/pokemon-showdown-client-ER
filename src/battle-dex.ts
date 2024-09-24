@@ -1,4 +1,4 @@
-import { getName } from '../data/pokemon-showdown/data/mods/ssb/conditions';
+
 /**
  * Pokemon Showdown Dex
  *
