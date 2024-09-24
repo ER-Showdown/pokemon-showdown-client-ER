@@ -15,7 +15,7 @@ if (backendRepository.endsWith("/")) {
 const rootDir = path.resolve(__dirname, "..");
 process.chdir(rootDir);
 
-const noBackendBuild = process.argv.includes("--no-backend-build");
+let noBackendBuild = process.argv.includes("--no-backend-build");
 
 if (!fs.existsSync(backendRepository)) {
 	// Since we just cloned the backend repository, we have to build it.
