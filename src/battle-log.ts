@@ -702,6 +702,7 @@ export class BattleLog {
 		if (str.substr(0, 3) === '>> ' || str.substr(0, 4) === '>>> ') return this.escapeHTML(str);
 		// Don't format console results (<<).
 		if (str.substr(0, 3) === '<< ') return this.escapeHTML(str);
+		str = formatText(str, isTrusted);
 
 		let options = BattleLog.prefs('chatformatting') || {};
 
