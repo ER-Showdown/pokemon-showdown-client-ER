@@ -3185,7 +3185,7 @@ function toId() {
 				console.log("OWNUSERID = " + ownUserid);
 				var buf = '<div class="userdetails">';
 				const p = Dex.resourcePrefix + 'sprites/trainers/';
-				let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<'];
+				let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<', 'oisintheguy', 'pizzawithtuna','kyletheeeveemaster','iskosc'];
 
 
 				if (avatar)

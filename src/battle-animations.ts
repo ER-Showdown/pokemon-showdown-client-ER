@@ -687,7 +687,7 @@ export class BattleScene implements BattleSceneStub {
 		const ratinghtml = side.rating ? ` title="Rating: ${BattleLog.escapeHTML(side.rating)}"` : ``;
 		const faded = side.name ? `` : ` style="opacity: 0.4"`;
 		const p = Dex.resourcePrefix + 'sprites/trainers/';
-		let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<'];
+		let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<', 'oisintheguy', 'pizzawithtuna','kyletheeeveemaster', 'iskosc'];
 
 		return `<div class="trainer trainer-${posStr}"${faded}><strong>${BattleLog.escapeHTML(side.name)}</strong><div class="trainersprite"${ratinghtml} style="background-image:url(${custom_trainers.includes(side.id) ? p + (side.id === "siobhanthegal>_<" ? "siobhanthegal" : side.id) + ".png" : Dex.resolveAvatar(side.avatar) }); background-size: contain"></div>${pokemonhtml}</div>`;
 	}
@@ -1549,8 +1549,8 @@ export class BattleScene implements BattleSceneStub {
 		this.preloadImage(Dex.resourcePrefix + 'sprites/ani-back/substitute.gif');
 	}
 	rollBgm() {
-		this.setBgm(16);
-		//this.setBgm(1 + this.numericId % 15);
+		//this.setBgm(16);
+		this.setBgm(1 + this.numericId % 18);
 	}
 	setBgm(bgmNum: number) {
 		if (this.bgmNum === bgmNum) return;
@@ -1611,8 +1611,20 @@ export class BattleScene implements BattleSceneStub {
 		case -101:
 			this.bgm = BattleSound.loadBgm('audio/spl-elite4.mp3', 3962, 152509, this.bgm);
 			break;
+		case 15:
+			this.bgm = BattleSound.loadBgm('https://github.com/ER-Showdown/pokemon-showdown-client-ER/raw/refs/heads/master/offline/geeta.mp3', 23000, 300000, this.bgm);
+			break;
 		case 16:
-			this.bgm = BattleSound.loadBgm('offline/test.mp3', 23000, 300000, this.bgm);
+			this.bgm = BattleSound.loadBgm('https://github.com/ER-Showdown/pokemon-showdown-client-ER/raw/refs/heads/master/offline/redbluesm.mp3', 74000, 298000, this.bgm);
+			break;
+		case 16:
+			this.bgm = BattleSound.loadBgm('https://github.com/ER-Showdown/pokemon-showdown-client-ER/raw/refs/heads/master/offline/octopathcc2.mp3', 28000, 362000, this.bgm);
+			break;
+		case 17:
+			this.bgm = BattleSound.loadBgm('https://github.com/ER-Showdown/pokemon-showdown-client-ER/raw/refs/heads/master/offline/youwillrecallournames.mp3', 21000, 405000, this.bgm);
+			break;
+		case 18:
+			this.bgm = BattleSound.loadBgm('https://github.com/ER-Showdown/pokemon-showdown-client-ER/raw/refs/heads/master/offline/youwillrecallournames.mp3', 0, 326000, this.bgm);
 			break;
 		default:
 			this.bgm = BattleSound.loadBgm('audio/sm-rival.mp3', 11389, 62158, this.bgm);
