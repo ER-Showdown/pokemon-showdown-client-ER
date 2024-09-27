@@ -473,7 +473,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 		"// DO NOT EDIT - automatically built with build-tools/build-indexes\n\n";
 	const GENS = [9, 8, 7, 6];
 	const DOUBLES = GENS; //GENS.filter((x) => x > 2).map((num) => -num);
-	const OTHER = [8.33]; //8.33 -> gen8eliteredux
+	const OTHER = [8.33, -8.33]; //8.33 -> gen8eliteredux
 
 	// process.stdout.write("\n  ");
 	for (const genIdent of [
@@ -603,7 +603,11 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 				}
 				if (IsEliteRedux) {
 					let tier = species.tier;
-					tier = Dex.mod("gen8eliteredux").species.get(species.name).tier;
+					let moddedSpecies = Dex.mod("gen8eliteredux").species.get(species.name)
+
+					if (isDoubles) tier = moddedSpecies.doublesTier ?? moddedSpecies.tier;
+					else tier = moddedSpecies.tier;
+
 					return tier;
 				}
 				if (
@@ -716,13 +720,24 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 			BattleTeambuilderTable["gen8bdsp"].monotypeBans = monotypeBans;
 			BattleTeambuilderTable["gen8bdsp"].formatSlices = formatSlices;
 		} else if (IsEliteRedux) {
-			BattleTeambuilderTable["gen8eliteredux"] = {};
-			BattleTeambuilderTable["gen8eliteredux"].learnsets = {};
-			BattleTeambuilderTable["gen8eliteredux"].tiers = tiers;
-			BattleTeambuilderTable["gen8eliteredux"].items = items;
-			BattleTeambuilderTable["gen8eliteredux"].overrideTier = overrideTier;
-			BattleTeambuilderTable["gen8eliteredux"].monotypeBans = monotypeBans;
-			BattleTeambuilderTable["gen8eliteredux"].formatSlices = formatSlices;
+			if (isDoubles) {
+				BattleTeambuilderTable["gen8elitereduxdoubles"] = {};
+				BattleTeambuilderTable["gen8elitereduxdoubles"].learnsets = {};
+				BattleTeambuilderTable["gen8elitereduxdoubles"].tiers = tiers;
+				BattleTeambuilderTable["gen8elitereduxdoubles"].items = items;
+				BattleTeambuilderTable["gen8elitereduxdoubles"].overrideTier = overrideTier;
+				BattleTeambuilderTable["gen8elitereduxdoubles"].monotypeBans = monotypeBans;
+				BattleTeambuilderTable["gen8elitereduxdoubles"].formatSlices = formatSlices;		
+			} else {
+				BattleTeambuilderTable["gen8eliteredux"] = {};
+				BattleTeambuilderTable["gen8eliteredux"].learnsets = {};
+				BattleTeambuilderTable["gen8eliteredux"].tiers = tiers;
+				BattleTeambuilderTable["gen8eliteredux"].items = items;
+				BattleTeambuilderTable["gen8eliteredux"].overrideTier = overrideTier;
+				BattleTeambuilderTable["gen8eliteredux"].monotypeBans = monotypeBans;
+				BattleTeambuilderTable["gen8eliteredux"].formatSlices = formatSlices;
+			}
+
 		} else if (isVGC) {
 			BattleTeambuilderTable[gen + "vgc"] = {};
 			BattleTeambuilderTable[gen + "vgc"].tiers = tiers;

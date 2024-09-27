@@ -551,7 +551,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 	set: PokemonSet | null = null;
 
 	protected formatType: 'doubles' | 'bdsp' | 'bdspdoubles' | 'letsgo' | 'metronome' | 'natdex' | 'nfe' |
-	'dlc1' | 'dlc1doubles' | 'stadium' | 'lc' | 'eliteredux' | null = null;
+	'dlc1' | 'dlc1doubles' | 'stadium' | 'lc' | 'eliteredux' | 'elitereduxdoubles' | null = null;
 
 	/**
 	 * Cached copy of what the results list would be with only base filters
@@ -608,7 +608,11 @@ abstract class BattleTypedSearch<T extends SearchType> {
 		}
 		if (format.includes('eliteredux')) {
 			this.dex = Dex.mod('gen8eliteredux' as ID);
-			this.formatType = 'eliteredux'
+			if (format.includes("doubles")) {
+				this.formatType = "elitereduxdoubles"
+			} else {
+				this.formatType = 'eliteredux'
+			}
 		}
 		if (format.includes('doubles') && this.dex.gen > 4 && !this.formatType) this.formatType = 'doubles';
 		if (format === 'partnersincrime') this.formatType = 'doubles';
@@ -816,6 +820,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 			this.formatType === 'natdex' ? `gen${gen}natdex` :
 			this.formatType === 'stadium' ? `gen${gen}stadium${gen > 1 ? gen : ''}` :
 			this.formatType === 'eliteredux' ? `gen8eliteredux` :
+			this.formatType === "elitereduxdoubles" ? `gen8elitereduxdoubles` :
 			`gen${gen}`;
 		if (table && table[tableKey]) {
 			table = table[tableKey];
@@ -921,6 +926,8 @@ class BattlePokemonSearch extends BattleTypedSearch<'pokemon'> {
 			table = table['gen8' + this.formatType];
 		} else if (this.formatType === 'eliteredux') {
 			table = table['gen8' + this.formatType];
+		} else if (this.formatType === "elitereduxdoubles") {
+			table = table['gen8' + this.formatType];		
 		} else if (this.formatType === 'letsgo') {
 			table = table['gen7letsgo'];
 		} else if (this.formatType === 'natdex') {
@@ -1182,7 +1189,11 @@ class BattleItemSearch extends BattleTypedSearch<'item'> {
 		if (this.formatType?.startsWith('bdsp')) {
 			table = table['gen8bdsp'];
 		} else if (this.formatType?.startsWith('eliteredux')) {
-			table = table['gen8eliteredux'];
+			if (this.formatType.includes("doubles")) {
+				table = table["gen8elitereduxdoubles"];
+			} else {
+				table = table['gen8eliteredux'];
+			}
 		} else if (this.formatType === 'natdex') {
 			table = table['gen' + this.dex.gen + 'natdex'];
 		} else if (this.formatType === 'metronome') {
