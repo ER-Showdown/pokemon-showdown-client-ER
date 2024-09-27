@@ -852,7 +852,7 @@ Storage.unpackLine = function (line) {
 		bracketIndex > 0
 			? line.slice(0, isBox ? bracketIndex - 4 : bracketIndex)
 			: "gen9";
-	if (format && format.slice(0, 3) !== "gen") format = "gen6" + format;
+	// if (format && format.slice(0, 3) !== "gen") format = "gen6" + format;
 	return {
 		name: line.slice(slashIndex + 1, pipeIndex),
 		format: format,

@@ -7,6 +7,15 @@
 {
     "version": "0.2.0",
     "configurations": [
+    {
+        "name": "[FRONTEND] Build Indexes (DEBUG)",
+        "program": "${workspaceFolder}/build-tools/build-indexes",
+        "request": "launch",
+        "skipFiles": [
+            "<node_internals>/**"
+        ],
+        "type": "node"
+    },
         {
             "name": "[CLIENT]: Singular Session (Chrome)",
             "type": "chrome",

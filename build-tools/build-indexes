@@ -471,7 +471,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 
 	let buf =
 		"// DO NOT EDIT - automatically built with build-tools/build-indexes\n\n";
-	const GENS = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+	const GENS = [9, 8, 7, 6];
 	const DOUBLES = GENS; //GENS.filter((x) => x > 2).map((num) => -num);
 	const OTHER = [8.33]; //8.33 -> gen8eliteredux
 
@@ -496,7 +496,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 		const isStadium = ("" + genIdent).endsWith(".04");
 		const isDoubles = genIdent < 0;
 		const isVGC = ("" + genIdent).endsWith(".5");
-		const IsEliteRedux = genIdent === 8.33;
+		const IsEliteRedux = genIdent === 8.33 || genIdent === -8.33;
 		const genNum = Math.floor(isDoubles ? -genIdent : genIdent);
 		const gen = (() => {
 			let genStr = "gen" + genNum;
@@ -1268,7 +1268,7 @@ process.stdout.write("Building `data/teambuilder-tables.js`... ");
 	// Past gen table
 	//
 
-	for (const genNum of [8, 7, 6, 5, 4, 3, 2, 1]) {
+	for (const genNum of [8, 7, 6]) {
 		const gen = "gen" + genNum;
 		const nextGen = "gen" + (genNum + 1);
 		const genDex = Dex.mod(gen);
