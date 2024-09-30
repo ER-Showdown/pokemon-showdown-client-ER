@@ -25,6 +25,14 @@ Config.defaultserver = {
 	altport: 80,
 	registered: true,
 };
+Config.server = {
+	id: "showdown",
+	host: "er-showdown-backend-926545055857.us-central1.run.app",
+	port: 443,
+	httpport: 8000,
+	altport: 80,
+	registered: true,
+};
 
 Config.roomsFirstOpenScript = function () {};
 
