@@ -560,7 +560,7 @@
 
 			buf += '<hr />';
 			if (app.user.get('named')) {
-				buf += '<p class="buttonbar" style="text-align:right"><button name="login"><i class="fa fa-pencil"></i> Change name</button> <button name="logout"><i class="fa fa-power-off"></i> Log out</button></p>';
+				buf += '<p class="buttonbar" style="text-align:right"><button name="login" disabled><i class="fa fa-pencil"></i> Change name</button> <button name="logout"><i class="fa fa-power-off"></i> Log out</button></p>';
 			} else {
 				buf += '<p class="buttonbar" style="text-align:right"><button name="login">Choose name</button></p>';
 			}
