@@ -729,7 +729,7 @@ abstract class BattleTypedSearch<T extends SearchType> {
 	protected firstLearnsetid(speciesid: ID) {
 		let table = BattleTeambuilderTable;
 		if (this.formatType?.startsWith('bdsp')) table = table['gen8bdsp'];
-		if(this.formatType?.startsWith('eliteredux')){ 
+		if(this.formatType?.startsWith('eliteredux') || this.format == 'lc'){ 
 			table = table['gen8eliteredux'];
 		}
 		if (this.formatType === 'letsgo') table = table['gen7letsgo'];
@@ -1120,7 +1120,7 @@ class BattleAbilitySearch extends BattleTypedSearch<'ability'> {
 			abilitySet.push(['header', "Special Event Ability"]);
 			abilitySet.push(['ability', toID(species.abilities['S'])]);
 		} 
-		if (isER) {
+		if (isER || format === 'lc') {
 			abilitySet.push(['header', "Innates"]);
 			if (species.abilities['I1']) {
 				abilitySet.push(['ability',toID(species.abilities['I1'])])
@@ -1507,7 +1507,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 	] as ID[] as readonly ID[];
 	getBaseResults() {
 		if (!this.species) return this.getDefaultResults();
-		const dex = this.dex;
+		const dex = Dex.mod('gen8eliteredux' as ID);
 		let species = dex.species.get(this.species);
 		const format = this.format;
 		const isHackmons = (format.includes('hackmons') || format.endsWith('bh'));
@@ -1515,7 +1515,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		const isTradebacks = format.includes('tradebacks');
 		const regionBornLegality = dex.gen >= 6 &&
 			/^battle(spot|stadium|festival)/.test(format) || format.startsWith('vgc') ||
-			(dex.gen === 9 && this.formatType !== 'natdex' && this.formatType !== 'eliteredux');
+			(dex.gen === 9 && this.formatType !== 'natdex' && this.formatType !== 'eliteredux' && format !== 'lc');
 
 		let learnsetid = this.firstLearnsetid(species.id);
 		let moves: string[] = [];
@@ -1524,7 +1524,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		let gen = '' + dex.gen;
 		let lsetTable = BattleTeambuilderTable;
 		if (this.formatType?.startsWith('bdsp')) lsetTable = lsetTable['gen8bdsp'];
-		if (this.formatType?.startsWith('eliteredux')) lsetTable = lsetTable['gen8eliteredux'];
+		if (this.formatType?.startsWith('eliteredux') || format === 'lc') lsetTable = lsetTable['gen8eliteredux'];
 		if (this.formatType === 'letsgo') lsetTable = lsetTable['gen7letsgo'];
 		if (this.formatType?.startsWith('dlc1')) lsetTable = lsetTable['gen8dlc1'];
 		while (learnsetid) {
@@ -1534,16 +1534,16 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 					let learnsetEntry = learnset[moveid];
 					const move = dex.moves.get(moveid);
 					const minGenCode: {[gen: number]: string} = {6: 'p', 7: 'q', 8: 'g', 9: 'a'};
-					if (regionBornLegality && !learnsetEntry.includes(minGenCode[dex.gen])) {
-						continue;
-					}
-					if (
-						!learnsetEntry.includes(gen) &&
-						(!isTradebacks ? true : !(move.gen <= dex.gen && learnsetEntry.includes('' + (dex.gen + 1))))
-					) {
-						continue;
-					}
-					if ((this.formatType !== 'natdex' || 'eliteredux') && move.isNonstandard === "Past") {
+					// if (regionBornLegality && !learnsetEntry.includes(minGenCode[dex.gen])) {
+					// 	continue;
+					// }
+					// if (
+					// 	!learnsetEntry.includes(gen) &&
+					// 	(!isTradebacks ? true : !(move.gen <= dex.gen && learnsetEntry.includes('' + (dex.gen + 1))))
+					// ) {
+					// 	continue;
+					// }
+					if ((this.formatType !== 'natdex' || 'eliteredux' || 'lc') && move.isNonstandard === "Past") {
 						continue;
 					}
 					if (
