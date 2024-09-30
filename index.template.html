@@ -3,12 +3,6 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta id="viewport" name="viewport" content="width=device-width" />
-		<title>Elite Redux Showdown!</title>
-		<meta content="Elite Redux Showdown!" property="og:title" />
-		<meta content="The official Elite Redux Pokemon Showdown fork for the emerald romhack!" property="og:description" />
-		<meta content="https://www.elitereduxshowdown.com/" property="og:url" />
-		<meta content="https://www.elitereduxshowdown.com/elite-redux-icon.png" property="og:image" />
-		<meta content="#43B581" data-react-helmet="true" name="theme-color" />
 		<title>Showdown!</title>
 		<link rel="shortcut icon" href="favicon.ico" id="dynamic-favicon" />
 		<link rel="stylesheet" href="style/battle.css" />
@@ -18,8 +12,16 @@
 		<link rel="stylesheet" href="style/font-awesome.css" />
 		<meta name="robots" content="noindex" />
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-		<script src="/config/config.js"></script>
+		<script src="https://play.pokemonshowdown.com/config/config.js"></script>
 		<script type="text/javascript">
+			Config.defaultserver = {
+				id: "showdown",
+				host: "er-showdown-backend-926545055857.us-central1.run.app",
+				port: 443,
+				httpport: 8000,
+				altport: 80,
+				registered: true,
+			};
 		</script>
 		<script>
 			function loadRemoteData(src) {
@@ -28,6 +30,20 @@
 				document.head.appendChild(scriptEl);
 			}
 			Config.testclient = true;
+			(function() {
+				if (location.search !== '') {
+					var m = /\?~~(([^:\/]*)(:[0-9]*)?)/.exec(location.search);
+					if (m) {
+						Config.server = {
+							id: m[1],
+							host: m[2],
+							port: (m[3] && parseInt(m[3].substr(1))) || 8000
+						};
+					} else {
+						alert('Unrecognised query string syntax: ' + location.search);
+					}
+				}
+			})();
 		</script>
 		<!--[if lte IE 8]><script>
 			Config.oldie = true;
@@ -35,7 +51,6 @@
 	</head>
 	<body>
 		<div id="header" class="header">
-			<img src="elite-redux-icon.png">
 			<img class="logo" src="pokemonshowdownbeta.png" alt="Pok&eacute;mon Showdown! (beta)" width="146" height="44" /><div class="maintabbarbottom"></div>
 		</div>
 		<div class="ps-room scrollable" id="mainmenu"><div class="mainmenuwrapper">
