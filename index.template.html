@@ -30,20 +30,11 @@
 				document.head.appendChild(scriptEl);
 			}
 			Config.testclient = true;
-			(function() {
-				if (location.search !== '') {
-					var m = /\?~~(([^:\/]*)(:[0-9]*)?)/.exec(location.search);
-					if (m) {
-						Config.server = {
-							id: m[1],
-							host: m[2],
-							port: (m[3] && parseInt(m[3].substr(1))) || 8000
-						};
-					} else {
-						alert('Unrecognised query string syntax: ' + location.search);
-					}
-				}
-			})();
+			Config.server = {
+				id: "localhost",
+				host: "localhost",
+				port: "8000"
+			}
 		</script>
 		<!--[if lte IE 8]><script>
 			Config.oldie = true;

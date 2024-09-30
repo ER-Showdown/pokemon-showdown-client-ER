@@ -526,33 +526,50 @@ function toId() {
 				 * See `finishRename` above for a list of events this can emit.
 				 */
 				this.challstr = challstr;
-				var self = this;
-				$.post(
-					this.getActionPHP(),
-					{
-						act: "upkeep",
-						challstr: this.challstr,
-					},
-					Storage.safeJSON(function (data) {
-						self.loaded = true;
-						if (!data.username) {
+
+				if (app.assertion == null && app.token == null) {
+					const authorizeUrl = new URL('https://play.pokemonshowdown.com/api/oauth/authorize');
+					authorizeUrl.searchParams.append('redirect_uri', window.location);
+					authorizeUrl.searchParams.append('client_id', "893f07952b1b7f8eb9479532b17d4b8c");
+					authorizeUrl.searchParams.append('challenge', challstr);
+					window.location = authorizeUrl;
+				} else {
+					const assertionUrl = new URL('https://play.pokemonshowdown.com/api/oauth/api/getassertion');
+					assertionUrl.searchParams.append('challenge', challstr);
+					assertionUrl.searchParams.append('client_id', "893f07952b1b7f8eb9479532b17d4b8c");
+					assertionUrl.searchParams.append('token', app.token);
+					$.post(
+						assertionUrl,
+						{},
+						(data) => {
+							if (!data) {
+								this.loaded = true;
+								app.topbar.updateUserbar();
+								return;
+							}
+							const parts = app.assertion.split(",");
+							console.debug(parts);
+							
+							if (parts.length < 1) {
+								this.loaded = true;
+								app.topbar.updateUserbar();
+								return;								
+							}
+
+							const username = parts[1];
+							this.loaded = true;
 							app.topbar.updateUserbar();
-							return;
-						}
-
-						// | , ; are not valid characters in names
-						data.username = data.username.replace(/[\|,;]+/g, "");
-
-						if (data.loggedin) {
-							self.set("registered", {
-								username: data.username,
-								userid: toUserid(data.username),
+							app.send("/trn " + username + ",0," + data);
+							this.set("registered", {
+								username: username,
+								userid: toUserid(username),
 							});
+							// this.finishRename(username, app.assertion);
 						}
-						self.finishRename(data.username, data.assertion);
-					}),
-					"text"
-				);
+					)
+					
+				}
+
 				/// We can't request a user rename until our challstr comes in from the login server.
 				if (Config.devUsernameOverride) {
 					console.debug(
@@ -602,6 +619,12 @@ function toId() {
 		initialize: function () {
 			// Gotta cache this since backbone removes it
 			this.query = window.location.search;
+			const params = new URLSearchParams(this.query);
+
+			this.assertion = params.get("assertion");
+			this.token = params.get("token");
+
+			console.debug("assertion + token", this.assertion, this.token);
 			window.app = this;
 			this.initializeRooms();
 			this.initializePopups();
