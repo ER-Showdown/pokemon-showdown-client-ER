@@ -1,7 +1,6 @@
 /**
- * This is an example config used locally.
- * For the configuration used on the production GCP server, see
- * gcp-config.js.
+ * This is the configuration used for the GCP instance of ER showdown.
+ * It is used by the dockerfile when building the image.
  */
 var Config = Config || {};
 
@@ -24,15 +23,15 @@ Config.whitelist = [
 // address bar is `Config.routes.client`.
 Config.defaultserver = {
 	id: "showdown",
-	host: "er-showdown-backend-926545055857.us-central1.run.app",
+	host: "10.128.0.19",
 	port: 443,
 	httpport: 8000,
 	altport: 80,
 	registered: true,
 };
 Config.server = {
-	id: "localhost",
-	host: "localhost",
+	id: "showdown",
+	host: "10.128.0.19",
 	port: 443,
 	httpport: 8000,
 	altport: 80,
@@ -44,3 +43,14 @@ Config.roomsFirstOpenScript = function () {};
 Config.customcolors = {
 	zarel: "aeo",
 };
+/*** Begin automatically generated configuration ***/
+Config.version = "0.11.2 (7cc94e3d/92c14ffd)";
+
+Config.routes = {
+	root: 'pokemonshowdown.com',
+	client: 'play.pokemonshowdown.com',
+	dex: 'dex.pokemonshowdown.com',
+	replays: 'replay.pokemonshowdown.com',
+	users: 'pokemonshowdown.com/users',
+};
+/*** End automatically generated configuration ***/
