@@ -3011,7 +3011,7 @@
 						baseFormat === 'battlefestivaldoubles') {
 						set.level = 50;
 					}
-					if (baseFormat.startsWith('lc') || baseFormat.endsWith('lc')) set.level = 5;
+					if (baseFormat.startsWith('lc') || baseFormat.endsWith('lc')) set.level = 100;
 				}
 				set.gender = 'F';
 				if (set.happiness) delete set.happiness;
