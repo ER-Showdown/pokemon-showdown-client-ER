@@ -93,8 +93,8 @@ async function main() {
 		}
 	}
 
-	var user1Url = `http://localhost:8080/index.html?username=${args.user1}`;
-	var user2Url = `http://localhost:8080/index.html?username=${args.user2}`;
+	var user1Url = `http://localhost:8080/testclient.html?~~localhost:8000&username=${args.user1}`;
+	var user2Url = `http://localhost:8080/testclient.html?~~localhost:8000&username=${args.user2}`;
 
 	console.debug(
 		`launching chrome browser at ${chromePath}, user1 url: ${user1Url}, user2 url: ${user2Url}`

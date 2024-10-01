@@ -3,12 +3,6 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta id="viewport" name="viewport" content="width=device-width" />
-		<title>Elite Redux Showdown!</title>
-		<meta content="Elite Redux Showdown!" property="og:title" />
-		<meta content="The official Elite Redux Pokemon Showdown fork for the emerald romhack!" property="og:description" />
-		<meta content="https://www.elitereduxshowdown.com/" property="og:url" />
-		<meta content="https://www.elitereduxshowdown.com/pokemonshowdown.png" property="og:image" />
-		<meta content="#43B581" data-react-helmet="true" name="theme-color" />
 		<title>Showdown!</title>
 		<link rel="shortcut icon" href="favicon.ico" id="dynamic-favicon" />
 		<link rel="stylesheet" href="style/battle.css" />
@@ -18,24 +12,29 @@
 		<link rel="stylesheet" href="style/font-awesome.css" />
 		<meta name="robots" content="noindex" />
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-		<script src="/config/config.js"></script>
-		<script type="text/javascript">
-		</script>
+		<script src="https://play.pokemonshowdown.com/config/config.js"></script>
 		<script>
 			function loadRemoteData(src) {
 				var scriptEl = document.createElement('script');
 				scriptEl.src = src.replace(/.*\/?data\//g, 'https://play.pokemonshowdown.com/data/');
 				document.head.appendChild(scriptEl);
+				console.debug(`couldn't load local script ${src} resorting to remote at ${scriptEl.src}`);
 			}
 			Config.testclient = true;
-			Config.server = {
-				id: "localhost",
-				host: "localhost",
-				port: 443,
-				httpport: 8000,
-				altport: 80,
-				registered: true,
-			};
+			(function() {
+				if (location.search !== '') {
+					var m = /\?~~(([^:\/]*)(:[0-9]*)?)/.exec(location.search);
+					if (m) {
+						Config.server = {
+							id: m[1],
+							host: m[2],
+							port: (m[3] && parseInt(m[3].substr(1))) || 8000
+						};
+					} else {
+						alert('Unrecognised query string syntax: ' + location.search);
+					}
+				}
+			})();
 		</script>
 		<!--[if lte IE 8]><script>
 			Config.oldie = true;
@@ -52,7 +51,8 @@
 						<div class="pm-window news-embed">
 							<h3><button class="closebutton" tabindex="-1" aria-label="Close"><i class="fa fa-times-circle"></i></button><button class="minimizebutton" tabindex="-1" aria-label="Minimize"><i class="fa fa-minus-circle"></i></button>Latest News</h3>
 							<div class="pm-log" style="max-height:none">
-								<div class="newsentry"><h4>Elite Redux Showdown</h4><p>Welcome to the Elite Redux Showdown Server! Check out the real hack and more here: <a href="https://discord.gg/eliteredux" target="_blank">https://discord.gg/eliteredux</a></p></div>
+								<div class="newsentry"><h4>Elite Redux Showdown</h4><p>Welcome to the Elite Redux Showdown Server! Check out <b>Darkly's</b> outstanding hack and more here: <a href="https://discord.gg/eliteredux" target="_blank">https://discord.gg/eliteredux</a></p><p>&mdash;<strong>Redspyboy</strong> <small class="date">on August 20, 2023</small></p></div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 			<div class="rightmenu">
 			</div>
 			<div class="mainmenufooter">
-				<small><a href="//pokemonshowdown.com/" target="_blank"><strong>Pok&eacute;mon Showdown</strong></a> | <a href="http://smogon.com/" target="_blank"><strong>Smogon</strong></a><br><a href="//ydarissep.github.io/Elite-Redux-Pokedex//" target="_blank">Pokédex</a> | <a href="//pokemonshowdown.com/replay/" target="_blank">Replays</a> | <a href="//pokemonshowdown.com/rules" target="_blank">Rules</a></small> | <small><a href="//pokemonshowdown.com/forums/" target="_blank">Forum</a></small>
+				<small><a href="//pokemonshowdown.com/" target="_blank"><strong>Pok&eacute;mon Showdown</strong></a> | <a href="http://smogon.com/" target="_blank"><strong>Smogon</strong></a><br><a href="//ydarissep.github.io/Elite-Redux-Pokedex/" target="_blank">Pokédex</a> | <a href="//pokemonshowdown.com/replay/" target="_blank">Replays</a> | <a href="//pokemonshowdown.com/rules" target="_blank">Rules</a></small> | <small><a href="//pokemonshowdown.com/forums/" target="_blank">Forum</a></small>
 			</div>
 		</div></div>
 		<script>
@@ -89,8 +89,8 @@
 		<script src="js/server/chat-formatter.js" onerror="loadRemoteData(this.src)"></script>
 		<script src="js/battledata.js" onerror="alert('You must build the client with `node build` before using testclient.html')"></script>
 		<script src="data/text.js" onerror="loadRemoteData(this.src)"></script>
-		<script src="data/pokedex-mini.js" onerror="loadRemoteData(this.src)"></script>
-		<script src="data/pokedex-mini-bw.js" onerror="loadRemoteData(this.src)"></script>
+		<!-- <script src="data/pokedex-mini.js" onerror="loadRemoteData(this.src)"></script>
+		<script src="data/pokedex-mini-bw.js" onerror="loadRemoteData(this.src)"></script> -->
 		<script src="data/typechart.js" onerror="loadRemoteData(this.src)"></script>
 		<script src="js/battle.js"></script>
 		<script src="js/lib/sockjs-1.4.0-nwjsfix.min.js"></script>
@@ -99,6 +99,9 @@
 		<script>
 			document.getElementById('loading-message').innerHTML += ' DONE<br />Loading client...';
 		</script>
+
+		<script src="config/teams.js"></script>
+		<script src="config/er-config.js"></script>
 
 		<script src="js/client.js"></script>
 		<script src="js/client-topbar.js"></script>
@@ -124,6 +127,8 @@
 		<script src="js/search.js"></script>
 
 		<script src="data/aliases.js" async="async" onerror="loadRemoteData(this.src)"></script>
+		<!-- Order matters here as our dev username bootstrapper requires jQuery and the app.user model to be defined. -->
+		
 
 		<script>
 			window.onload = () => {
