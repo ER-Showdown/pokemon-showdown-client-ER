@@ -27,6 +27,8 @@ WORKDIR /er-showdown/
 
 COPY --from=builder --chown=node:node /er-showdown/ ./
 
+COPY ./config/gcp-config.js ./config/config.js
+
 RUN npm install --omit=dev \
     && npm cache clean --force
 
