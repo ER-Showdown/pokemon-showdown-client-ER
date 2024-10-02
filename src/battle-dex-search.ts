@@ -1274,6 +1274,7 @@ class BattleMoveSearch extends BattleTypedSearch<'move'> {
 		return results;
 	}
 	private moveIsNotUseless(id: ID, species: Species, moves: string[], set: PokemonSet | null) {
+		return true;
 		const dex = this.dex;
 
 		let abilityid: ID = set ? toID(set.ability) : '' as ID;
