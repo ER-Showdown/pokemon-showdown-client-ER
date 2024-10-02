@@ -55,7 +55,7 @@ Storage.bg = {
 			} else if (location.host === Config.routes.client) {
 				// bgid = ['horizon', 'ocean', 'waterfall', 'shaymin', 'charizards', 'psday'][Math.floor(Math.random() * 6)];
 				bgid = [
-					"lapras",
+					"mural1",
 					"flygon",
 					"kingdra",
 					"magmar",
@@ -67,6 +67,7 @@ Storage.bg = {
 					"mudkip",
 					"torchic",
 					"treecko",
+					"lapras",
 				];
 			} else {
 				$(document.body).css({
