@@ -527,7 +527,43 @@ function toId() {
 				 */
 				this.challstr = challstr;
 
-				if (app.assertion == null && app.token == null) {
+				if (Config.testclient) {
+					var self = this;
+					$.post(
+						this.getActionPHP(),
+						{
+							act: "upkeep",
+							challstr: this.challstr,
+						},
+						Storage.safeJSON(function (data) {
+							self.loaded = true;
+							if (!data.username) {
+								app.topbar.updateUserbar();
+								return;
+							}
+
+							// | , ; are not valid characters in names
+							data.username = data.username.replace(/[\|,;]+/g, "");
+
+							if (data.loggedin) {
+								self.set("registered", {
+									username: data.username,
+									userid: toUserid(data.username),
+								});
+							}
+							self.finishRename(data.username, data.assertion);
+						}),
+						"text"
+					);
+					/// We can't request a user rename until our challstr comes in from the login server.
+					if (Config.devUsernameOverride) {
+						console.debug(
+							`renaming user to dev override ${Config.devUsernameOverride}`
+						);
+						app.user.rename(Config.devUsernameOverride);
+					}
+					
+				} else if (app.assertion == null && app.token == null) {
 					const authorizeUrl = new URL('https://play.pokemonshowdown.com/api/oauth/authorize');
 					authorizeUrl.searchParams.append('redirect_uri', window.location);
 					authorizeUrl.searchParams.append('client_id', "893f07952b1b7f8eb9479532b17d4b8c");
