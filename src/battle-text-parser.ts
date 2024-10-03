@@ -698,7 +698,7 @@ class BattleTextParser {
 				return line1 + template.replace('[POKEMON]', this.pokemon(pokemon)).replace('[ITEM]', this.effect(item)).replace('[MOVE]', kwArgs.move);
 			}
 			if (id === 'stealeat') {
-				const template = this.template('removeItem', "Bug Bite");
+				const template = this.template('removeBerry', "Bug Bite");
 				return line1 + template.replace('[SOURCE]', this.pokemon(kwArgs.of)).replace('[ITEM]', this.effect(item));
 			}
 			if (kwArgs.from) {
