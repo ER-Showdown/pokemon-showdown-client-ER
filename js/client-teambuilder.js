@@ -2624,7 +2624,7 @@
 				}
 
 				buf += '<div class="formrow"><label class="formlabel">Shiny:</label><div>';
-				buf += '<label><input type="radio" name="shiny" value="yes"' + (set.shiny ? ' checked' : '') + ' /> Yes</label> ';
+				buf += '<label><input type="radio" name="shiny" value="yes"' + (set.shiny ? ' checked' : '') + ' disabled/> Yes</label>';
 				buf += '<label><input type="radio" name="shiny" value="no"' + (!set.shiny ? ' checked' : '') + ' /> No</label>';
 				buf += '</div></div>';
 

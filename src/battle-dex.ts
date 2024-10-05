@@ -711,7 +711,6 @@ const Dex = new class implements ModdedDex {
 	}
 
 	getPokemonIcon(pokemon: string | Pokemon | ServerPokemon | PokemonSet | null, facingLeft?: boolean) {
-		console.log("getpokemonicon called")
 		if (pokemon === 'pokeball') {
 			return `background:transparent url(${Dex.resourcePrefix}sprites/pokemonicons-pokeball-sheet.png) no-repeat scroll -0px 4px`;
 		} else if (pokemon === 'pokeball-statused') {
@@ -723,7 +722,6 @@ const Dex = new class implements ModdedDex {
 		}
 
 		let id = toID(pokemon);
-		console.log("id: " + id)
 		if (!pokemon || typeof pokemon === 'string') pokemon = null;
 		// @ts-ignore
 		if (pokemon?.speciesForme) id = toID(pokemon.speciesForme);
@@ -734,17 +732,19 @@ const Dex = new class implements ModdedDex {
 			// @ts-ignore
 			id = toID(pokemon.volatiles.formechange[1]);
 		}
-		let num = this.getPokemonIconNum(id, pokemon?.gender === 'F', facingLeft);
+		// let num = this.getPokemonIconNum(id, pokemon?.gender === 'F', facingLeft);
 
-		let top = Math.floor(num / 12) * 30;
-		let left = (num % 12) * 40;
+		// let top = Math.floor(num / 12) * 30;
+		// let left = (num % 12) * 40;
+		if(id.includes('silvally')){
+			id = toID('silvally');
+		}
 		let fainted = ((pokemon as Pokemon | ServerPokemon)?.fainted ? `;opacity:.3;filter:grayscale(100%) brightness(.5)` : ``);
 
 		return `background:transparent url(${Dex.resourcePrefix}sprites/pokemon_icons/${id}_icon.png) no-repeat scroll ${fainted}`;
 	}
 
 	getTeambuilderSpriteData(pokemon: any, gen: number = 0): TeambuilderSpriteData {
-		console.log("getTeambuilderSpriteData called")
 		let id = toID(pokemon.species);
 		let spriteid = pokemon.spriteid;
 		let species = Dex.species.get(pokemon.species);
@@ -780,7 +780,6 @@ const Dex = new class implements ModdedDex {
 				spriteData.x = -2;
 				spriteData.y = 0;
 			}
-			console.log(spriteData.y)
 			return spriteData;
 		}
 		spriteData.spriteDir = 'sprites/gen5';
@@ -790,12 +789,10 @@ const Dex = new class implements ModdedDex {
 		else if (gen <= 4 && species.gen <= 4) spriteData.spriteDir = 'sprites/gen4';
 		spriteData.x = 10;
 		spriteData.y = 20;
-		console.log(spriteData.y)
 		return spriteData;
 	}
 
 	getTeambuilderSprite(pokemon: any, gen: number = 0) {
-		console.log("getTeambuilderSprite called")
 		if (!pokemon) return '';
 		const data = this.getTeambuilderSpriteData(pokemon, gen);
 		const shiny = (data.shiny ? '-shiny' : '');

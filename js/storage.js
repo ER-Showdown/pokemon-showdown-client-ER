@@ -55,7 +55,7 @@ Storage.bg = {
 			} else if (location.host === Config.routes.client) {
 				// bgid = ['horizon', 'ocean', 'waterfall', 'shaymin', 'charizards', 'psday'][Math.floor(Math.random() * 6)];
 				bgid = [
-					"lapras",
+					"mural1",
 					"flygon",
 					"kingdra",
 					"magmar",
@@ -67,6 +67,7 @@ Storage.bg = {
 					"mudkip",
 					"torchic",
 					"treecko",
+					"lapras",
 				];
 			} else {
 				$(document.body).css({
@@ -456,7 +457,7 @@ Storage.initPrefs = function () {
 	Storage.loadTeams();
 	if (Config.testclient) {
 		return this.initTestClient();
-	} else if (location.protocol + "//" + location.hostname === Storage.origin) {
+	} else {
 		// Same origin, everything can be kept as default
 		Config.server = Config.server || Config.defaultserver;
 		this.whenPrefsLoaded.load();
@@ -464,47 +465,47 @@ Storage.initPrefs = function () {
 		return;
 	}
 
-	// Cross-origin
+	// // Cross-origin
 
-	if (!("postMessage" in window)) {
-		// browser does not support cross-document messaging
-		return Storage.whenAppLoaded(function (app) {
-			app.trigger("init:unsupported");
-		});
-	}
+	// if (!("postMessage" in window)) {
+	// 	// browser does not support cross-document messaging
+	// 	return Storage.whenAppLoaded(function (app) {
+	// 		app.trigger("init:unsupported");
+	// 	});
+	// }
 
-	$(window).on("message", Storage.onMessage);
+	// $(window).on("message", Storage.onMessage);
 
-	if (document.location.hostname !== Config.routes.client) {
-		$(
-			'<iframe src="https://' +
-				Config.routes.client +
-				"/crossdomain.php?host=" +
-				encodeURIComponent(document.location.hostname) +
-				"&path=" +
-				encodeURIComponent(document.location.pathname.substr(1)) +
-				"&protocol=" +
-				encodeURIComponent(document.location.protocol) +
-				'" style="display: none;"></iframe>'
-		).appendTo("body");
-	} else {
-		Config.server = Config.server || Config.defaultserver;
-		$(
-			'<iframe src="https://' +
-				Config.routes.client +
-				'/crossprotocol.html?v1.2" style="display: none;"></iframe>'
-		).appendTo("body");
-		setTimeout(function () {
-			// HTTPS may be blocked
-			// yes, this happens, blame Avast! and BitDefender and other antiviruses
-			// that feel a need to MitM HTTPS poorly
-			Storage.whenPrefsLoaded.load();
-			if (!Storage.whenTeamsLoaded.isLoaded) {
-				Storage.whenTeamsLoaded.error = "stalled";
-				Storage.whenTeamsLoaded.update();
-			}
-		}, 2000);
-	}
+	// if (document.location.hostname !== Config.routes.client) {
+	// 	$(
+	// 		'<iframe src="https://' +
+	// 			Config.routes.client +
+	// 			"/crossdomain.php?host=" +
+	// 			encodeURIComponent(document.location.hostname) +
+	// 			"&path=" +
+	// 			encodeURIComponent(document.location.pathname.substr(1)) +
+	// 			"&protocol=" +
+	// 			encodeURIComponent(document.location.protocol) +
+	// 			'" style="display: none;"></iframe>'
+	// 	).appendTo("body");
+	// } else {
+	// 	Config.server = Config.server || Config.defaultserver;
+	// 	$(
+	// 		'<iframe src="https://' +
+	// 			Config.routes.client +
+	// 			'/crossprotocol.html?v1.2" style="display: none;"></iframe>'
+	// 	).appendTo("body");
+	// 	setTimeout(function () {
+	// 		// HTTPS may be blocked
+	// 		// yes, this happens, blame Avast! and BitDefender and other antiviruses
+	// 		// that feel a need to MitM HTTPS poorly
+	// 		Storage.whenPrefsLoaded.load();
+	// 		if (!Storage.whenTeamsLoaded.isLoaded) {
+	// 			Storage.whenTeamsLoaded.error = "stalled";
+	// 			Storage.whenTeamsLoaded.update();
+	// 		}
+	// 	}, 2000);
+	// }
 };
 
 Storage.crossOriginFrame = null;
@@ -653,64 +654,64 @@ Storage.initTestClient = function () {
 	}
 
 	Storage.whenAppLoaded(function (app) {
-		// var get = $.get;
-		// $.get = function (uri, data, callback, type) {
-		// 	if (type === "html") {
-		// 		uri += "&testclient";
-		// 	}
-		// 	if (data) {
-		// 		uri += "?testclient";
-		// 		for (var i in data) {
-		// 			uri += "&" + i + "=" + encodeURIComponent(data[i]);
-		// 		}
-		// 	}
-		// 	if (uri[0] === "/") {
-		// 		// relative URI
-		// 		uri = Dex.resourcePrefix + uri.substr(1);
-		// 	}
+		var get = $.get;
+		$.get = function (uri, data, callback, type) {
+			if (type === "html") {
+				uri += "&testclient";
+			}
+			if (data) {
+				uri += "?testclient";
+				for (var i in data) {
+					uri += "&" + i + "=" + encodeURIComponent(data[i]);
+				}
+			}
+			if (uri[0] === "/") {
+				// relative URI
+				uri = Dex.resourcePrefix + uri.substr(1);
+			}
 
-		// 	if (sid) {
-		// 		data.sid = sid;
-		// 		get(uri, data, callback, type);
-		// 	} else {
-		// 		app.addPopup(ProxyPopup, { uri: uri, callback: callback });
-		// 	}
-		// };
-		// var post = $.post;
-		// $.post = function (uri, data, callback, type) {
-		// 	if (type === "html") {
-		// 		uri += "&testclient";
-		// 	}
-		// 	if (uri[0] === "/") {
-		// 		//relative URI
-		// 		uri = Dex.resourcePrefix + uri.substr(1);
-		// 	}
+			if (sid) {
+				data.sid = sid;
+				get(uri, data, callback, type);
+			} else {
+				app.addPopup(ProxyPopup, { uri: uri, callback: callback });
+			}
+		};
+		var post = $.post;
+		$.post = function (uri, data, callback, type) {
+			if (type === "html") {
+				uri += "&testclient";
+			}
+			if (uri[0] === "/") {
+				//relative URI
+				uri = Dex.resourcePrefix + uri.substr(1);
+			}
 
-		// 	if (sid) {
-		// 		data.sid = sid;
-		// 		post(uri, data, callback, type);
-		// 	} else {
-		// 		var src =
-		// 			'<!DOCTYPE html><html><body><form action="' +
-		// 			BattleLog.escapeHTML(uri) +
-		// 			'" method="POST">';
-		// 		src += '<input type="hidden" name="testclient">';
-		// 		for (var i in data) {
-		// 			src +=
-		// 				'<input type=hidden name="' +
-		// 				i +
-		// 				'" value="' +
-		// 				BattleLog.escapeHTML(data[i]) +
-		// 				'">';
-		// 		}
-		// 		src +=
-		// 			'<input type=submit value="Please click this button first."></form></body></html>';
-		// 		app.addPopup(ProxyPopup, {
-		// 			uri: "data:text/html;charset=UTF-8," + encodeURIComponent(src),
-		// 			callback: callback,
-		// 		});
-		// 	}
-		// };
+			if (sid) {
+				data.sid = sid;
+				post(uri, data, callback, type);
+			} else {
+				var src =
+					'<!DOCTYPE html><html><body><form action="' +
+					BattleLog.escapeHTML(uri) +
+					'" method="POST">';
+				src += '<input type="hidden" name="testclient">';
+				for (var i in data) {
+					src +=
+						'<input type=hidden name="' +
+						i +
+						'" value="' +
+						BattleLog.escapeHTML(data[i]) +
+						'">';
+				}
+				src +=
+					'<input type=submit value="Please click this button first."></form></body></html>';
+				app.addPopup(ProxyPopup, {
+					uri: "data:text/html;charset=UTF-8," + encodeURIComponent(src),
+					callback: callback,
+				});
+			}
+		};
 		Storage.whenPrefsLoaded.load();
 	});
 };

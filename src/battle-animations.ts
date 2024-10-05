@@ -687,7 +687,7 @@ export class BattleScene implements BattleSceneStub {
 		const ratinghtml = side.rating ? ` title="Rating: ${BattleLog.escapeHTML(side.rating)}"` : ``;
 		const faded = side.name ? `` : ` style="opacity: 0.4"`;
 		const p = Dex.resourcePrefix + 'sprites/trainers/';
-		let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<', 'oisintheguy', 'pizzawithtuna','kyletheeeveemaster', 'iskosc', 'thunados'];
+		let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<', 'oisintheguy', 'pizzawithtuna','kyletheeeveemaster', 'iskosc', 'thunados','pllayya'];
 
 		return `<div class="trainer trainer-${posStr}"${faded}><strong>${BattleLog.escapeHTML(side.name)}</strong><div class="trainersprite"${ratinghtml} style="background-image:url(${custom_trainers.includes(side.id) ? p + (side.id === "siobhanthegal>_<" ? "siobhanthegal" : side.id) + ".png" : Dex.resolveAvatar(side.avatar) }); background-size: contain"></div>${pokemonhtml}</div>`;
 	}
