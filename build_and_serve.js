@@ -20,7 +20,7 @@ async function pipeOutput(child) {
 
 async function main() {
 	await pipeOutput(spawn("npm", ["run", "build-dev"], { shell: true }));
-	await pipeOutput(spawn("npx", ["http-server", "-c-1"], { shell: true }));
+	await pipeOutput(spawn("npx", ["http-server", "-c-1", "--proxy http://localhost:8080?"], { shell: true }));
 }
 
 main().then(() => process.exit(0));

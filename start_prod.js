@@ -19,7 +19,7 @@ async function pipeOutput(child) {
 }
 
 async function main() {
-	await pipeOutput(spawn("npx", ["http-server"], { shell: true }));
+	await pipeOutput(spawn("npx", ["http-server", "--proxy http://localhost:8080?"], { shell: true }));
 }
 
 process.on("SIGINT", () => process.exit(1));
