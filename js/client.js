@@ -562,7 +562,7 @@ function toId() {
 						);
 						app.user.rename(Config.devUsernameOverride);
 					}
-					
+
 				} else if (app.assertion == null && app.token == null) {
 					const authorizeUrl = new URL('https://play.pokemonshowdown.com/api/oauth/authorize');
 					authorizeUrl.searchParams.append('redirect_uri', window.location);
@@ -585,11 +585,11 @@ function toId() {
 							}
 							const parts = app.assertion.split(",");
 							console.debug(parts);
-							
+
 							if (parts.length < 1) {
 								this.loaded = true;
 								app.topbar.updateUserbar();
-								return;								
+								return;
 							}
 
 							const username = parts[1];
@@ -603,7 +603,7 @@ function toId() {
 							// this.finishRename(username, app.assertion);
 						}
 					)
-					
+
 				}
 
 				/// We can't request a user rename until our challstr comes in from the login server.
@@ -3244,7 +3244,7 @@ function toId() {
 				console.log("OWNUSERID = " + ownUserid);
 				var buf = '<div class="userdetails">';
 				const p = Dex.resourcePrefix + 'sprites/trainers/';
-				let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<', 'oisintheguy', 'thunados','kyletheeeveemaster','iskosc', 'pizzawithtuna', 'pllayya', 'mixolx'];
+				let custom_trainers = ['nya2314', 'sexyteddy', 'jameslyons','avgmawilefan','siobhanthegal>_<', 'oisintheguy', 'thunados','kyletheeeveemaster','iskosc', 'pizzawithtuna', 'pllayya', 'mixolx','gammaorionis22'];
 
 
 				if (avatar)
