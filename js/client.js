@@ -659,6 +659,7 @@ function toId() {
 
 			this.assertion = params.get("assertion");
 			this.token = params.get("token");
+			this.backendVersion = undefined;
 
 			console.debug("assertion + token", this.assertion, this.token);
 			window.app = this;
@@ -692,6 +693,10 @@ function toId() {
 					this.addRoom("lobby", null, true);
 				}
 				Storage.whenPrefsLoaded(function () {
+					/// Check for backend version number every 15 seconds.
+					app.requestVersionNumber();
+					setInterval(app.requestVersionNumber, 15000);
+
 					if (!Config.server.registered) {
 						app.send("/autojoin");
 						Backbone.history.start({ pushState: !Config.testclient });
@@ -1055,6 +1060,55 @@ function toId() {
 				app.connect();
 			});
 		},
+		constructSocket: function () {
+			var protocol =
+				Config.server.port === 443 || Config.server.https
+					? "https"
+					: "http";
+			Config.server.host = $.trim(Config.server.host);
+			try {
+				if (Config.server.host === "localhost") {
+					// connecting to localhost from psim.us is now banned as of Chrome 94
+					// thanks Docker for having vulns
+					// https://wicg.github.io/cors-rfc1918
+					// anyway, this affects SockJS because it makes HTTP requests to localhost
+					// but it turns out that making direct WebSocket connections to localhost is
+					// still supported, so we'll just bypass SockJS and use WebSocket directly.
+					var possiblePort = new URL(
+						document.location + self.query
+					).searchParams.get("port");
+					// We need to bypass the port as well because on most modern browsers, http gets forced
+					// to https, which means a ws connection is made to port 443 instead of wherever it's actually running,
+					// thus ensuring a failed connection.
+					var port = possiblePort || Config.server.port;
+					console.log("Bypassing SockJS for localhost");
+					var url =
+						"ws://" +
+						Config.server.host +
+						":" +
+						port +
+						Config.sockjsprefix +
+						"/websocket";
+					console.log(url);
+					return new WebSocket(url);
+				}
+				const connectionUrl =
+					protocol +
+					"://" +
+					Config.server.host +
+					":" +
+					Config.server.port +
+					Config.sockjsprefix;
+				console.debug(`Connection to server at ${connectionUrl}`);
+				return new SockJS(connectionUrl, [], { timeout: 5 * 60 * 1000 });
+			} catch (err) {
+				// The most common case this happens is if an HTTPS connection fails,
+				// and we fall back to HTTP, which throws a SecurityError if the URL
+				// is HTTPS
+				self.trigger("init:connectionerror");
+				return null;
+			}
+		},
 		/**
 		 * This function establishes the actual connection to the sim server.
 		 * This is intended to be called only by `initializeConnection` above.
@@ -1085,56 +1139,7 @@ function toId() {
 			}
 
 			var self = this;
-			var constructSocket = function () {
-				var protocol =
-					Config.server.port === 443 || Config.server.https
-						? "https"
-						: "http";
-				Config.server.host = $.trim(Config.server.host);
-				try {
-					if (Config.server.host === "localhost") {
-						// connecting to localhost from psim.us is now banned as of Chrome 94
-						// thanks Docker for having vulns
-						// https://wicg.github.io/cors-rfc1918
-						// anyway, this affects SockJS because it makes HTTP requests to localhost
-						// but it turns out that making direct WebSocket connections to localhost is
-						// still supported, so we'll just bypass SockJS and use WebSocket directly.
-						var possiblePort = new URL(
-							document.location + self.query
-						).searchParams.get("port");
-						// We need to bypass the port as well because on most modern browsers, http gets forced
-						// to https, which means a ws connection is made to port 443 instead of wherever it's actually running,
-						// thus ensuring a failed connection.
-						var port = possiblePort || Config.server.port;
-						console.log("Bypassing SockJS for localhost");
-						var url =
-							"ws://" +
-							Config.server.host +
-							":" +
-							port +
-							Config.sockjsprefix +
-							"/websocket";
-						console.log(url);
-						return new WebSocket(url);
-					}
-					const connectionUrl =
-						protocol +
-						"://" +
-						Config.server.host +
-						":" +
-						Config.server.port +
-						Config.sockjsprefix;
-					console.debug(`Connection to server at ${connectionUrl}`);
-					return new SockJS(connectionUrl, [], { timeout: 5 * 60 * 1000 });
-				} catch (err) {
-					// The most common case this happens is if an HTTPS connection fails,
-					// and we fall back to HTTP, which throws a SecurityError if the URL
-					// is HTTPS
-					self.trigger("init:connectionerror");
-					return null;
-				}
-			};
-			this.socket = constructSocket();
+			this.socket = app.constructSocket();
 
 			var socketopened = false;
 			var altport = Config.server.port === Config.server.altport;
@@ -1289,6 +1294,36 @@ function toId() {
 				return;
 			}
 			this.send("/utm " + packedTeam);
+		},
+		requestVersionNumber: function() {
+				const socket = app.constructSocket();
+				console.debug("requesting backend version number with fresh socket");
+				socket.onopen = function () {
+					console.debug("sending /version message to backend");
+					socket.send("/version");
+				};
+				socket.onmessage = function (msg) {
+					if (window.console && console.log) {
+						console.log("received message on version checker socket << " + msg.data);
+					}
+					if (msg.data.startsWith("|version|")) {
+						let version = parseInt(data.replace("|version|", ""));
+
+						if (this.backendVersion == undefined) {
+							this.backendVersion = version;
+						} else if (this.backendVersion != version) {
+							app.addPopupPrompt("The server has just deployed an update. Please finish any active games and refresh your browser. Your client will automatically refresh in 10 minutes. ", "Okay", function() {});
+							setTimeout(function() {
+								window.location.reload();
+							}, 300000);
+						}
+					};
+			}
+
+			setTimeout(function() {
+				console.debug("backend version check timed out");
+				socket.close();
+			}, 30000);
 		},
 		/**
 		 * Receive from sim server
