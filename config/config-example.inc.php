@@ -33,7 +33,7 @@ $psconfig = [
 		'/^http:\/\/smogon\.com$/' => 'smogon.com_',
 		'/^http:\/\/www\.smogon\.com$/' => 'www.smogon.com_',
 		'/^http:\/\/logs\.psim\.us$/' => 'logs.psim.us_',
-		'/^http:\/\/logs\.psim\.us:3000$/' => 'logs.psim.us_',
+		'/^http:\/\/logs\.psim\.us:8080$/' => 'logs.psim.us_',
 		'/^http:\/\/[a-z0-9]+\.psim\.us$/' => '',
 		'/^http:\/\/play\.pokemonshowdown\.com$/' => '',
 	],

@@ -21,7 +21,7 @@ RUN mkdir ./data/ \
 
 FROM cgr.dev/chainguard/node:latest
 
-ENV PORT=3000
+ENV PORT=8080
 
 WORKDIR /er-showdown/
 
