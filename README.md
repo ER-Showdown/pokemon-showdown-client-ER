@@ -65,12 +65,12 @@ Outside of VSCode, you will need to handle starting and stopping the server/clie
 This is still not too difficult, and can be easily automated with a script or different IDE configurations.
 
 For the backend, run `npm run start`. This will start the backend webserver that listens on `localhost:8000`.
-For the frontend, run `npm run serve`. This will start the frontend webserver that listens on `http://localhost:8080`.
+For the frontend, run `npm run serve`. This will start the frontend webserver that listens on `http://localhost:3000`.
 
-Now that both web servers are running, open your browser to `http://localhost:8080/testclient.html?~~localhost:8000`.
+Now that both web servers are running, open your browser to `http://localhost:3000/testclient.html?~~localhost:8000`.
 This will load pokemon showdown and configure it to connect to your local backend server instance.
 If you would like to have it preload a username for you so you don't have to choose one everytime, you can add a query parameter to your url.
-For instance: `http://localhost:8080/testclient.html?~~localhost:8000&username=player11112222`.
+For instance: `http://localhost:3000/testclient.html?~~localhost:8000&username=player11112222`.
 
 ### Preloaded Teams
 
@@ -112,7 +112,7 @@ locally on port 8000, you can navigate to `testclient.html?~~localhost:8000`.
 of the local filesystem. As a workaround, try using a different browser or
 serving the files locally first (ie. run `npx http-server` from the
 directory this README is in, then navigate in your browser to
-`http://localhost:8080/testclient.html?~~localhost:8000`).
+`http://localhost:3000/testclient.html?~~localhost:8000`).
 
 ### Limitations
 
