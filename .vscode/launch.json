@@ -19,7 +19,7 @@
         {
             "name": "[CLIENT]: Singular Session (Chrome)",
             "type": "chrome",
-            "url": "http://localhost:3000/testclient.html",
+            "url": "http://localhost:8080/testclient.html",
             "request": "launch",
             "preLaunchTask": "Start TSC Watcher",
             "postDebugTask": "Terminate All Tasks",
@@ -39,7 +39,7 @@
             "request": "attach",
             "type": "chrome",
             "port": 9200,
-            "url": "http://localhost:3000/testclient.html?username=${config:showdown.player1Name}",
+            "url": "http://localhost:8080/testclient.html?username=${config:showdown.player1Name}",
             "presentation": {
                 "hidden": true,
                 "group": "FRONTEND",
@@ -54,7 +54,7 @@
             "request": "attach",
             "type": "chrome",
             "port": 9200,
-            "url": "http://localhost:3000/testclient.html?username=${config:showdown.player2Name}",
+            "url": "http://localhost:8080/testclient.html?username=${config:showdown.player2Name}",
             "presentation": {
                 "hidden": true,
                 "group": "FRONTEND",
@@ -80,4 +80,4 @@
             }
         }
     ]
-}
+} 
