@@ -19,7 +19,7 @@ async function pipeOutput(child) {
 }
 
 async function main() {
-	await pipeOutput(spawn("npx", ["http-server", "-p 3000", "-a 0.0.0.0", "--proxy http://localhost:3000?"], { shell: true }));
+	await pipeOutput(spawn("npx", ["http-server", "-c -1", "-p 3000", "-a 0.0.0.0", "--proxy http://localhost:3000?"], { shell: true }));
 }
 
 process.on("SIGINT", () => process.exit(1));
