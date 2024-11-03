@@ -15,7 +15,8 @@
     "build": "node build full && tsc",
     "build-full": "node build full",
     "build-dev": "node build full --no-backend-build",
-    "serve": "nodemon ./build_and_serve.js"
+    "serve": "nodemon ./build_and_serve.js",
+    "start": "forever start ./build_and_serve.js"
   },
   "dependencies": {
     "@babel/core": "^7.21.3",
