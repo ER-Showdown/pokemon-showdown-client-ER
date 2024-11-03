@@ -6,7 +6,7 @@ function toId() {
 }
 
 (function ($) {
-	Config.sockjsprefix = "/showdown";
+	Config.sockjsprefix = "/backend/showdown";
 	Config.root = "/";
 
 	if (window.nodewebkit) {
@@ -1112,8 +1112,7 @@ function toId() {
 							Config.server.host +
 							":" +
 							port +
-							Config.sockjsprefix +
-							"/websocket";
+							Config.sockjsprefix;
 						console.log(url);
 						return new WebSocket(url);
 					}
