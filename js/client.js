@@ -1120,7 +1120,7 @@ function toId() {
 						protocol +
 						"://" +
 						Config.server.host +
-						"/backend:" +
+						":" +
 						Config.server.port +
 						Config.sockjsprefix;
 					console.debug(`Connection to server at ${connectionUrl}`);

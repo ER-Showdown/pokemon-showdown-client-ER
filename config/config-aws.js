@@ -19,7 +19,7 @@ Config.whitelist = [
 // address bar is `Config.routes.client`.
 Config.defaultserver = {
 	id: "showdown",
-	host: "54.244.247.138",
+	host: "elitereduxshowdown.com",
 	port: 443,
 	httpport: 8000,
 	altport: 80,
@@ -27,7 +27,7 @@ Config.defaultserver = {
 };
 Config.server = {
 	id: "showdown",
-	host: "54.244.247.138",
+	host: "elitereduxshowdown.com",
 	port: 443,
 	httpport: 8000,
 	altport: 80,
