@@ -356,6 +356,14 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 		this.moveTrack.push([moveName, pp]);
 	}
 	rememberAbility(ability: string, isNotBase?: boolean) {
+		const speciesForme = this.getSpeciesForme() || this.speciesForme || '';
+		const species = Dex.species.get(speciesForme);
+		if (species.exists) {
+			if (species.abilities['I1'] === ability) return;
+			if (species.abilities['I2'] === ability) return;
+			if (species.abilities['I3'] === ability) return;
+		}
+
 		ability = Dex.abilities.get(ability).name;
 		this.ability = ability;
 		if (!this.baseAbility && !isNotBase) {
