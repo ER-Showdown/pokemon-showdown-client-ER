@@ -899,7 +899,7 @@ export class BattleScene implements BattleSceneStub {
 		}
 		return buf; // weather not found
 	}
-	sideConditionLeft(cond: [string, number, number, number], isFoe: boolean, all?: boolean) {
+	sideConditionLeft(cond: [string, number, number, number, boolean?], isFoe: boolean, all?: boolean) {
 		if (!cond[2] && !cond[3] && !all) return '';
 		let buf = `<br />${isFoe && !all ? "Foe's " : ""}${Dex.moves.get(cond[0]).name}`;
 		if (this.battle.gen < 7 && this.battle.hardcoreMode) return buf;
