@@ -3396,6 +3396,11 @@ export class Battle {
 			{
 				this.pseudoWeather[id][3] = false;
 			}
+			for (const side of this.sides) {
+				for (const id in side.sideConditions) {
+					side.sideConditions[id][4] = false;
+				}
+			}
 			break;
 		}
 		case 'upkeep': {
