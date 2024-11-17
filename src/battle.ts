@@ -718,7 +718,11 @@ export class Side {
 			this.sideConditions[condition] = [effect.name, 1, 5, 0, true];
 			break;
 		case 'tailwind':
-			this.sideConditions[condition] = [effect.name, 1, 3, 4, true]; //3 for gen 4 and air blower, 4 for default
+			if (fromAbility) {
+				this.sideConditions[condition] = [effect.name, 1, 3, 3, true];
+			} else {
+				this.sideConditions[condition] = [effect.name, 1, 4, 4, true];
+			}
 			break;
 		case 'luckychant':
 			this.sideConditions[condition] = [effect.name, 1, 5, 0, true];
