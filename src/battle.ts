@@ -358,13 +358,14 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 	rememberAbility(ability: string, isNotBase?: boolean) {
 		const speciesForme = this.getSpeciesForme() || this.speciesForme || '';
 		const species = Dex.species.get(speciesForme);
+		const abilityObj = Dex.abilities.get(ability);
 		if (species.exists) {
-			if (species.abilities['I1'] === ability) return;
-			if (species.abilities['I2'] === ability) return;
-			if (species.abilities['I3'] === ability) return;
+			if (species.abilities['I1'] === abilityObj.name) return;
+			if (species.abilities['I2'] === abilityObj.name) return;
+			if (species.abilities['I3'] === abilityObj.name) return;
 		}
 
-		ability = Dex.abilities.get(ability).name;
+		ability = abilityObj.name;
 		this.ability = ability;
 		if (!this.baseAbility && !isNotBase) {
 			this.baseAbility = ability;
