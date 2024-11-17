@@ -3026,7 +3026,7 @@ export class Battle {
 		case '-sidestart': {
 			let side = this.getSide(args[1]);
 			let effect = Dex.getEffect(args[2]);
-			side.addSideCondition(effect, !!kwArgs.persistent, Dex.getEffect(kwArgs.from) instanceof Ability);
+			side.addSideCondition(effect, !!kwArgs.persistent, !!kwArgs.from);
 
 			switch (effect.id) {
 			case 'tailwind':
