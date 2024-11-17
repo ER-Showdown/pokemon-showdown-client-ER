@@ -34,7 +34,7 @@ import {BattleScene, PokemonSprite, BattleStatusAnims} from './battle-animations
 /** [id, element?, ...misc] */
 export type EffectState = any[] & {0: ID};
 /** [name, minTimeLeft, maxTimeLeft] */
-export type WeatherState = [string, number, number];
+export type WeatherState = [string, number, number, boolean?];
 export type HPColor = 'r' | 'y' | 'g';
 
 export class Pokemon implements PokemonDetails, PokemonHealth {
@@ -122,7 +122,7 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 
 		this.sprite = side.battle.scene.addPokemonSprite(this);
 
-		
+
 	}
 
 	isActive() {
@@ -635,7 +635,7 @@ export class Side {
 	pokemon = [] as Pokemon[];
 
 	/** [effectName, levels, minDuration, maxDuration] */
-	sideConditions: {[id: string]: [string, number, number, number]} = {};
+	sideConditions: {[id: string]: [string, number, number, number, boolean?]} = {};
 	faintCounter = 0;
 
 	constructor(battle: Battle, n: number) {
@@ -687,7 +687,7 @@ export class Side {
 			if (this.foe && this.avatar === this.foe.avatar) this.rollTrainerSprites();
 		}
 	}
-	addSideCondition(effect: Effect, persist: boolean) {
+	addSideCondition(effect: Effect, persist: boolean, fromAbility: boolean = false) {
 		let condition = effect.id;
 		if (this.sideConditions[condition]) {
 			if (condition === 'spikes' || condition === 'toxicspikes') {
@@ -699,31 +699,35 @@ export class Side {
 		// Side conditions work as: [effectName, levels, minDuration, maxDuration]
 		switch (condition) {
 		case 'auroraveil':
-			this.sideConditions[condition] = [effect.name, 1, 5, 8];
+			if (fromAbility) {
+				this.sideConditions[condition] = [effect.name, 1, 3, 5, true];
+			} else {
+				this.sideConditions[condition] = [effect.name, 1, 5, 8, true];
+			}
 			break;
 		case 'reflect':
-			this.sideConditions[condition] = [effect.name, 1, 5, this.battle.gen >= 4 ? 8 : 0];
+			this.sideConditions[condition] = [effect.name, 1, 5, this.battle.gen >= 4 ? 8 : 0, true];
 			break;
 		case 'safeguard':
-			this.sideConditions[condition] = [effect.name, 1, persist ? 7 : 5, 0];
+			this.sideConditions[condition] = [effect.name, 1, persist ? 7 : 5, 0, true];
 			break;
 		case 'lightscreen':
-			this.sideConditions[condition] = [effect.name, 1, 5, this.battle.gen >= 4 ? 8 : 0];
+			this.sideConditions[condition] = [effect.name, 1, 5, this.battle.gen >= 4 ? 8 : 0, true];
 			break;
 		case 'mist':
-			this.sideConditions[condition] = [effect.name, 1, 5, 0];
+			this.sideConditions[condition] = [effect.name, 1, 5, 0, true];
 			break;
 		case 'tailwind':
-			this.sideConditions[condition] = [effect.name, 1, 3, 4]; //3 for gen 4 and air blower, 4 for default
+			this.sideConditions[condition] = [effect.name, 1, 3, 4, true]; //3 for gen 4 and air blower, 4 for default
 			break;
 		case 'luckychant':
-			this.sideConditions[condition] = [effect.name, 1, 5, 0];
+			this.sideConditions[condition] = [effect.name, 1, 5, 0, true];
 			break;
 		case 'stealthrock':
 		case 'spikes':
 		case 'toxicspikes':
 		case 'stickyweb':
-			this.sideConditions[condition] = [effect.name, 1, 0, 0];
+			this.sideConditions[condition] = [effect.name, 1, 0, 0, true];
 			break;
 		case 'gmaxwildfire':
 		case 'gmaxvolcalith':
@@ -732,13 +736,13 @@ export class Side {
 			this.sideConditions[condition] = [effect.name, 1, 4, 0];
 			break;
 		case 'grasspledge':
-			this.sideConditions[condition] = ['Swamp', 1, 4, 0];
+			this.sideConditions[condition] = ['Swamp', 1, 4, 0, true];
 			break;
 		case 'waterpledge':
-			this.sideConditions[condition] = ['Rainbow', 1, 4, 0];
+			this.sideConditions[condition] = ['Rainbow', 1, 4, 0, true];
 			break;
 		case 'firepledge':
-			this.sideConditions[condition] = ['Sea of Fire', 1, 4, 0];
+			this.sideConditions[condition] = ['Sea of Fire', 1, 4, 0, true];
 			break;
 		default:
 			this.sideConditions[condition] = [effect.name, 1, 0, 0];
@@ -1074,6 +1078,7 @@ export class Battle {
 	pseudoWeather = [] as WeatherState[];
 	weatherTimeLeft = 0;
 	weatherMinTimeLeft = 0;
+	weatherStarted = false;
 	/**
 	 * The side from which perspective we're viewing. Should be identical to
 	 * `nearSide` except in multi battles, where `nearSide` is always the first
@@ -1206,7 +1211,7 @@ export class Battle {
 		}
 	}
 	addPseudoWeather(weather: string, minTimeLeft: number, timeLeft: number) {
-		this.pseudoWeather.push([weather, minTimeLeft, timeLeft]);
+		this.pseudoWeather.push([weather, minTimeLeft, timeLeft, true]);
 		this.scene.updateWeather();
 	}
 	hasPseudoWeather(weather: string) {
@@ -1397,7 +1402,9 @@ export class Battle {
 			weather = '' as ID;
 		}
 		if (isUpkeep) {
-			if (this.weather && this.weatherTimeLeft) {
+			if (this.weatherStarted) {
+				this.weatherStarted = false;
+			} else if (this.weather && this.weatherTimeLeft) {
 				this.weatherTimeLeft--;
 				if (this.weatherMinTimeLeft !== 0) this.weatherMinTimeLeft--;
 			}
@@ -1413,15 +1420,16 @@ export class Battle {
 					this.activateAbility(poke, ability.name);
 					this.weatherSource = 'Ability';
 				} else {this.weatherSource = 'Move'}
-				this.weatherTimeLeft = (this.gen <= 5 || isExtremeWeather) ? 0 : 8;
-				this.weatherMinTimeLeft = (this.gen <= 5 || isExtremeWeather) ? 0 : 5;
+				this.weatherTimeLeft = (this.gen <= 5 || isExtremeWeather) ? 0 : 12;
+				this.weatherMinTimeLeft = (this.gen <= 5 || isExtremeWeather) ? 0 : 8;
 			} else if (isExtremeWeather) {
 				this.weatherTimeLeft = 0;
 				this.weatherMinTimeLeft = 0;
 			} else {
-				this.weatherTimeLeft = (this.gen <= 3 ? 5 : 8);
-				this.weatherMinTimeLeft = (this.gen <= 3 ? 0 : 5);
+				this.weatherTimeLeft = (this.gen <= 3 ? 5 : 12);
+				this.weatherMinTimeLeft = (this.gen <= 3 ? 0 : 8);
 			}
+			this.weatherStarted = true;
 		}
 		this.weather = weather;
 		this.scene.updateWeather();
@@ -1457,12 +1465,21 @@ export class Battle {
 	}
 	updateTurnCounters() {
 		for (const pWeather of this.pseudoWeather) {
+			if (pWeather[3])
+			{
+				pWeather[3] = false;
+				continue;
+			}
 			if (pWeather[1]) pWeather[1]--;
 			if (pWeather[2]) pWeather[2]--;
 		}
 		for (const side of this.sides) {
 			for (const id in side.sideConditions) {
 				let cond = side.sideConditions[id];
+				if (cond[4]) {
+					cond[4] = false;
+					continue;
+				}
 				if (cond[2]) cond[2]--;
 				if (cond[3]) cond[3]--;
 			}
@@ -1470,7 +1487,7 @@ export class Battle {
 		for (const poke of [...this.nearSide.active, ...this.farSide.active]) {
 			if (poke) {
 				if (poke.status === 'tox') poke.statusData.toxicTurns++;
-				poke.clearTurnstatuses();		
+				poke.clearTurnstatuses();
 			}
 		}
 		this.scene.updateWeather();
@@ -3005,7 +3022,7 @@ export class Battle {
 		case '-sidestart': {
 			let side = this.getSide(args[1]);
 			let effect = Dex.getEffect(args[2]);
-			side.addSideCondition(effect, !!kwArgs.persistent);
+			side.addSideCondition(effect, !!kwArgs.persistent, Dex.getEffect(kwArgs.from) instanceof Ability);
 
 			switch (effect.id) {
 			case 'tailwind':
@@ -3061,6 +3078,9 @@ export class Battle {
 			let minTimeLeft = 5;
 
 			let maxTimeLeft = 0;
+			if (effect.id.endsWith('room') && fromeffect instanceof Ability) {
+				minTimeLeft = 3;
+			}
 			if (effect.id.endsWith('terrain')) {
 				for (let i = this.pseudoWeather.length - 1; i >= 0; i--) {
 					let pwID = toID(this.pseudoWeather[i][0]);
@@ -3069,7 +3089,8 @@ export class Battle {
 						continue;
 					}
 				}
-				if (this.gen > 6) maxTimeLeft = 8;
+				minTimeLeft = 8;
+				if (this.gen > 6) maxTimeLeft = 12;
 			}
 			if (kwArgs.persistent) minTimeLeft += 2;
 			/// Update the trick room duration display when the ability twisted dimension activates as it will only last 3 turns in this case.
@@ -3367,6 +3388,14 @@ export class Battle {
 			this.farSide.active[0] = null;
 			this.scene.resetSides();
 			this.start();
+			break;
+		}
+		case 'clearstartedflag': {
+			this.weatherStarted = false;
+			for (const id in this.pseudoWeather)
+			{
+				this.pseudoWeather[id][3] = false;
+			}
 			break;
 		}
 		case 'upkeep': {
