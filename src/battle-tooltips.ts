@@ -1579,7 +1579,7 @@ class BattleTooltips {
 			if (isSound && value.abilityModify(0, 'Liquid Voice')) {
 				moveType = 'Water';
 			}
-			if (isSound && value.abilityModify(0, 'Sand Song')) {
+			if (isSound && moveType === 'Normal' && value.abilityModify(0, 'Sand Song')) {
 				moveType = 'Ground';
 			}
 		}
@@ -2301,7 +2301,7 @@ class BattleTooltips {
 			}
 		}
 		return abilityData;
-	} 
+	}
 	//Gets Elite Redux Innate Data
 	getPokemonInnateData(clientPokemon: Pokemon | null, serverPokemon: ServerPokemon | null | undefined) {
 		const innateData:  {innates: string[]} = {
@@ -2347,7 +2347,7 @@ class BattleTooltips {
 	}
 
 	//Gets Elite Redux Innate Text for Toolip
-	getPokemonInnateText( 
+	getPokemonInnateText(
 		clientPokemon: Pokemon | null,
 		serverPokemon: ServerPokemon | null | undefined,
 		isActive: boolean | undefined,
@@ -2359,7 +2359,7 @@ class BattleTooltips {
 		}
 		return text;
 	}
-	
+
 }
 
 type StatsTable = {hp: number, atk: number, def: number, spa: number, spd: number, spe: number};
