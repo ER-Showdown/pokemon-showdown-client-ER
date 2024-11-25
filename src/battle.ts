@@ -537,11 +537,11 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 		return !this.getTypeList(serverPokemon).includes('Flying');
 	}
 	effectiveAbility(serverPokemon?: ServerPokemon) {
-		if (this.fainted || this.volatiles['gastroacid']) return '';
+		if (this.fainted) return '';
 		const ability = this.side.battle.dex.abilities.get(
 			serverPokemon?.ability || this.ability || serverPokemon?.baseAbility || ''
 		);
-		if (this.side.battle.ngasActive() && !ability.isPermanent) {
+		if ((this.side.battle.ngasActive() || this.volatiles['gastroacid']) && !ability.isPermanent) {
 			return '';
 		}
 		return ability.name;
