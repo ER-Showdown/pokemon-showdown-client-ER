@@ -519,7 +519,13 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 		if (item === 'ironball') {
 			return true;
 		}
-		if (ability === 'levitate') {
+		if (this.hasAbility('levitate')) {
+			return false;
+		}
+		if (this.hasAbility('dragonfly')) {
+			return false;
+		}
+		if (this.hasAbility('aerialist')) {
 			return false;
 		}
 		if (this.volatiles['magnetrise'] || this.volatiles['telekinesis']) {
@@ -539,6 +545,18 @@ export class Pokemon implements PokemonDetails, PokemonHealth {
 			return '';
 		}
 		return ability.name;
+	}
+	hasAbility(ability: string, serverPokemon?: ServerPokemon) {
+		if (this.fainted) return false;
+		const abilityObject = this.side.battle.dex.abilities.get(ability);
+		if (!abilityObject) return false;
+		if (!abilityObject.isPermanent) {
+			if (this.side.battle.ngasActive() || this.volatiles['gastroacid']) return false;
+		}
+		return this.getActiveAbilities(this, serverPokemon)
+			.filter(it => it)
+			.map(it => this.side.battle.dex.abilities.get(it!).id)
+			.includes(abilityObject.id);
 	}
 	//TODO: Should probably refactor code to just call this function bc client is a mess rn
 	getActiveAbilities(clientPokemon: Pokemon, serverPokemon?: ServerPokemon) {
@@ -1562,9 +1580,11 @@ export class Battle {
 					foeTargets.push(target);
 				}
 
-				for (const foe of foeTargets) {
-					if (foe && !foe.fainted && foe.effectiveAbility() === 'Pressure') {
-						pp += 1;
+				if (target && !target.hasAbility('Pressure')) {
+					for (const foe of foeTargets) {
+						if (foe && !foe.fainted && foe.hasAbility('Pressure')) {
+							pp += 1;
+						}
 					}
 				}
 			}

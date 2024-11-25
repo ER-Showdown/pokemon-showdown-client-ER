@@ -73,15 +73,9 @@ class ModifiableValue {
 		return true;
 	}
 	tryAbility(abilityName: string) {
-		// if (abilityName !== this.abilityName) return false;
-		if (abilityName !== this.abilityName && !this.innates.includes(abilityName)) return false
-		if (this.pokemon?.volatiles['gastroacid']) {
-			this.comment.push(` (${abilityName} suppressed by Gastro Acid)`);
-			return false;
-		}
-		// Check for Neutralizing Gas
-		if (!this.pokemon?.effectiveAbility(this.serverPokemon)) return false;
-		return true;
+		const pokemon = this.pokemon;
+		if (!pokemon) return false;
+		return pokemon.hasAbility(abilityName);
 	}
 	tryWeather(weatherName?: string) {
 		if (!this.weatherName) return false;
@@ -1042,7 +1036,6 @@ class BattleTooltips {
 		if (statStagesOnly) return stats;
 
 		const ability = clientPokemon?.effectiveAbility(serverPokemon) ?? (serverPokemon.ability || serverPokemon.baseAbility)
-
 
 		const activeAbilities = this.getPokemonInnateData(clientPokemon, serverPokemon).innates || [];
 		if (ability) activeAbilities.push(ability);
