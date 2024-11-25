@@ -1269,8 +1269,10 @@ export class Battle {
 	}
 	ngasActive() {
 		for (const active of this.getAllActive()) {
-			if (active.ability === 'Neutralizing Gas' && !active.volatiles['gastroacid']) {
-				return true;
+			for (const ability of active.getActiveAbilities(active)) {
+				if (ability === 'Neutralizing Gas' && !active.volatiles['gastroacid']) {
+					return true;
+				}
 			}
 		}
 		return false;
