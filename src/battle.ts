@@ -1468,9 +1468,12 @@ export class Battle {
 		this.weather = weather;
 		this.scene.updateWeather();
 	}
+	getAllHazards() {
+		return ['spikes', 'toxicspikes', 'stealthrock', 'creepingthorns', 'stickyweb', 'gmaxsteelsurge'];
+	}
 	swapSideConditions() {
 		const sideConditions = [
-			'mist', 'lightscreen', 'reflect', 'spikes', 'safeguard', 'tailwind', 'toxicspikes', 'stealthrock', 'waterpledge', 'firepledge', 'grasspledge', 'stickyweb', 'auroraveil', 'gmaxsteelsurge', 'gmaxcannonade', 'gmaxvinelash', 'gmaxwildfire',
+			'mist', 'lightscreen', 'reflect', 'safeguard', 'tailwind', 'waterpledge', 'firepledge', 'grasspledge', 'auroraveil', 'gmaxcannonade', 'gmaxvinelash', 'gmaxwildfire', ...this.getAllHazards()
 		];
 		if (this.gameType === 'freeforall') {
 			// TODO: Add FFA support
